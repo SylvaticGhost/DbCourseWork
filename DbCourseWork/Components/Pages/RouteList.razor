@@ -1,0 +1,156 @@
+﻿@page "/routes"
+@using Ardalis.Result
+@using DbCourseWork.Helpers
+@using DbCourseWork.Models
+@using DbCourseWork.Services
+@inject IRouteService RouteService
+
+<PageTitle>Маршрути</PageTitle>
+
+<h1>Маршрути</h1>
+
+<p>Список маршрутів</p>
+
+@if (_routes == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <body style="width: 100%; display: flex; flex-direction: column; gap: 1rem;">
+    <header>
+        @if (!string.IsNullOrEmpty(_errorMessage))
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @_errorMessage
+                <button type="button" class="btn-close" @onclick="ClearError" aria-label="Close"></button>
+            </div>
+        }
+    </header>
+    <main style="display: flex; gap: 1rem;">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Номер</th>
+                <th>Назва</th>
+                <th>Оператор</th>
+                <th>Вид транспорту</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var route in _routes)
+            {
+                <tr>
+                    <td>@route.Number</td>
+                    <td>@route.Name</td>
+                    <td>@(((Operators)route.Operator).ToOfficialName())</td>
+                    <td>@route.Vehicle.ToString()</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        <div>
+            <h5>Вид транспорту</h5>
+            @foreach (var type in VehicleMapper.AllValues)
+            {
+                <div>
+                    <input type="checkbox" id="@type" name="@type" value="@type"/>
+                    <label for="@type">@type</label>
+                </div>
+            }
+            <h5>Перевізник</h5>
+            @foreach (var op in OperatorsMapper.AllValues)
+            {
+                <div>
+                    <input type="checkbox" id="@op" name="@op" value="@op"/>
+                    <label for="@op">@op.ToOfficialName()</label>
+                </div>
+            }
+        </div>
+    </main>
+    <footer style="width: 100%;">
+        <h3>Додати маршрут</h3>
+        <div style="display: flex; width: 100%; align-items: center">
+            <div class="v-input-container">
+                <label for="nw-number">Номер</label>
+                <input id="nw-number" type="text" style="width: 75px" @bind="_inputNumber"/>
+            </div>
+            <div class="v-input-container" style="width: 100%; max-width: 500px">
+                <label for="nw-name">Назва</label>
+                <input id="nw-name" style="width: 100%; flex-grow: 1" type="text" @bind="_inputName"/>
+            </div>
+            <div class="v-input-container">
+                <label for="nw-operator">Оператор</label>
+                <select id="nw-operator" @bind="_inputOperator">
+                    @foreach (var op in OperatorsMapper.AllValues)
+                    {
+                        <option value="@op">@op.ToOfficialName()</option>
+                    }
+                </select>
+            </div>
+            <button type="button" class="btn btn-primary" @onclick="AddNewRoute">Додати</button>
+        </div>
+    </footer>
+    </body>
+}
+
+@code {
+    void Click()
+    {
+        Console.WriteLine("Clicked");
+        StateHasChanged();
+    }
+    
+    private Route[] _routes;
+    private string? _errorMessage;
+
+    private string? _inputNumber;
+    private string? _inputName;
+    private Operators _inputOperator = Operators.KpKyivMetropoliten;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("Load page");
+        _routes = await RouteService.GetAllRoutes();
+    }
+    
+    private void ClearError() => _errorMessage = null;
+
+    private async Task AddNewRoute()
+    {
+        Console.WriteLine("Adding new route");
+        string? numberValidationError = RouteValidator.ValidateNumber(_inputNumber);
+        
+        if (!string.IsNullOrEmpty(numberValidationError))
+        {
+            _errorMessage = numberValidationError;
+            return;
+        }
+        
+        string? nameValidationError = RouteValidator.ValidateName(_inputName);
+
+        if (!string.IsNullOrEmpty(nameValidationError))
+        {
+            _errorMessage = nameValidationError;
+            return;
+        }
+
+        var createDto = new RouteCreateDto(_inputNumber!, _inputName!, (short)_inputOperator);
+        Result<Route> result = await RouteService.Create(createDto);
+        
+        if (result.IsSuccess)
+        {
+            _routes = await RouteService.GetAllRoutes();
+            _inputNumber = null;
+            _inputName = null;
+            _inputOperator = Operators.KpKyivMetropoliten;
+        }
+        else
+        {
+            _errorMessage = string.Join(',', result.Errors);
+        }
+    }
+
+}

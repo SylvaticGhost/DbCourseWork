@@ -1,0 +1,94 @@
+@page "/CardOwners"
+@using DbCourseWork.Models
+@using DbCourseWork.Services
+@inject ICardOwnerService CardOwnerService
+
+<PageTitle>Власники карток</PageTitle>
+<h3>Власники карток</h3>
+
+@if (_cardOwners == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+
+<body>
+    <header>
+        @if (!string.IsNullOrEmpty(_errorMessage))
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @_errorMessage
+                <button type="button" class="btn-close" @onclick="ClearError" aria-label="Close"></button>
+            </div>
+        }
+    </header>
+    <main style="display: flex; gap: 1rem;">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Номер</th>
+                <th>Імʼя</th>
+                <th>По батькові</th>
+                <th>Прізвище</th>
+                <th>Дата народження</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var cardOwner in _cardOwners ??  [])
+            {
+                <tr>
+                    <td>@cardOwner.Id</td>
+                    <td>@cardOwner.FirstName</td>
+                    <td>@cardOwner.MiddleName</td>
+                    <td>@cardOwner.LastName</td>
+                    <td>@cardOwner.BirthDate</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        
+
+        @if (_cardOwners != null && _cardOwners.Any())
+        {
+            <div style="display: flex; gap: 1rem;">
+                @if (_page > 1)
+                {
+                    <button class="btn btn-primary" @onclick="@(() => ChangePage(-1))">Previous</button>
+                }
+                @if (_page * 10 <= _cardOwners.Count())
+                {
+                    <button class="btn btn-primary" @onclick="@(() => ChangePage(1))">Next</button>
+                }
+            </div>
+        }
+    </main>
+</body>
+
+@code {
+    private string? _errorMessage;
+    private IEnumerable<CardOwner>? _cardOwners;
+    int _page = 1;
+    const int PageSize = 30;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await CardOwnerService.Search(new SearchParameters(_page, 10));
+        
+        if (result.IsSuccess)
+        {
+            _cardOwners = result.Value;
+        }
+        else
+        {
+            _errorMessage = string.Join(';', result.Errors);
+        }
+    }
+
+    private void ChangePage(int move)
+    {
+        _page += move;
+    }
+    
+    private void ClearError() => _errorMessage = null;
+}

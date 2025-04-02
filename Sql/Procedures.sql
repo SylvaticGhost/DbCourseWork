@@ -1,0 +1,2 @@
+INSERT INTO cards_owners(first_name, last_name, middle_name, birth_date) VALUES
+    ('Вадим', 'Прокопенко', 'Миколайович', '2000-10-10');                                                                    

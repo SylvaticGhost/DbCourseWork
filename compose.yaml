@@ -1,0 +1,20 @@
+﻿services:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+        
+  
+  dbcoursework:
+    image: dbcoursework
+    build:
+      context: .
+      dockerfile: DbCourseWork/Dockerfile
+  
+volumes:
+  db_data:
