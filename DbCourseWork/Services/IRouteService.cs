@@ -1,11 +1,14 @@
 using Ardalis.Result;
 using DbCourseWork.Models;
+using Route = DbCourseWork.Models.Route;
 
 namespace DbCourseWork.Services;
 
 public interface IRouteService
 {
-    public Task<Models.Route[]> GetAllRoutes();
+    public Task<Route[]> GetAllRoutes();
 
-    public Task<Result<Models.Route>> Create(RouteCreateDto routeCreateDto);
+    public Task<Result<Route>> Create(RouteCreateDto routeCreateDto);
+
+    public Task<Result<Route>> Find(string number);
 }

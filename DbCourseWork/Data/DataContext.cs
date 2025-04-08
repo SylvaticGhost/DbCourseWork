@@ -5,15 +5,19 @@ namespace DbCourseWork.Data;
 
 public class DataContext
 {
+    public static bool LogSql { get; set; } = true;
+
     private static string? _connectionString;
-    
+
     private readonly NpgsqlConnection _connection;
-    
+
+    private bool _connectionOpened = false;
+
     public DataContext(IConfiguration configuration)
     {
-        _connectionString ??= configuration["PgConnection"]
-                                 ?? throw new ArgumentNullException(nameof(configuration),"Connection string not found");
-        
+        _connectionString ??= configuration["PgConnection"] ??
+                              throw new ArgumentNullException(nameof(configuration), "Connection string not found");
+
         _connection = new NpgsqlConnection(_connectionString);
     }
 
@@ -32,18 +36,48 @@ public class DataContext
             throw;
         }
     }
-    
-    public Task<IEnumerable<T>> LoadData<T>(string sql) => _connection.QueryAsync<T>(sql);
 
-    public Task<T> LoadDataSingle<T>(string sql) => _connection.QuerySingleAsync<T>(sql);
+    private static Task<T> InSqlLog<T>(Task<T> task, string sql)
+    {
+        if (LogSql)
+        {
+            Console.WriteLine(sql);
+            Console.WriteLine();
+        }    
 
-    public Task<bool> ExecuteSql(string sql) => _connection.ExecuteAsync(sql).ContinueWith(t => t.Result > 0);
+        return task;
+    }
 
-    public Task<int> ExecuteSqlWithRowCount(string sql) => _connection.ExecuteAsync(sql);
-    
-    public Task<bool> ExecuteSql(string sql, DynamicParameters parameters) => _connection.ExecuteAsync(sql, parameters).ContinueWith(t => t.Result > 0);
+    public Task<IEnumerable<T>> LoadData<T>(string sql) => InSqlLog(_connection.QueryAsync<T>(sql), sql);
 
-    public Task<IEnumerable<T>> LoadData<T>(string sql, DynamicParameters parameters) => _connection.QueryAsync<T>(sql, parameters);
+    public Task<T> LoadDataSingle<T>(string sql) => InSqlLog(_connection.QuerySingleAsync<T>(sql), sql);
 
-    public Task<T> LoadDataSingle<T>(string sql, DynamicParameters parameters) => _connection.QuerySingleAsync<T>(sql, parameters);
+    public Task<bool> ExecuteSql(string sql) =>
+        InSqlLog(_connection.ExecuteAsync(sql).ContinueWith(t => t.Result > 0), sql);
+
+    public Task<int> ExecuteSqlWithRowCount(string sql) => InSqlLog(_connection.ExecuteAsync(sql), sql);
+
+    public Task<bool> ExecuteSql(string sql, DynamicParameters parameters) =>
+        InSqlLog(_connection.ExecuteAsync(sql, parameters).ContinueWith(t => t.Result > 0), sql);
+
+    public Task<IEnumerable<T>> LoadData<T>(string sql, DynamicParameters parameters) =>
+        InSqlLog(_connection.QueryAsync<T>(sql, parameters), sql);
+
+    public Task<T> LoadDataSingle<T>(string sql, DynamicParameters parameters) =>
+        InSqlLog(_connection.QuerySingleAsync<T>(sql, parameters), sql);
+
+    public ValueTask<NpgsqlTransaction> BeginTransaction()
+    {
+        OpenConnection();
+        return _connection.BeginTransactionAsync();
+    }
+
+    private void OpenConnection()
+    {
+        if(_connectionOpened)
+            return;
+        
+        _connection.Open();
+        _connectionOpened = true;
+    }
 }

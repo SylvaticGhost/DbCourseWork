@@ -1,0 +1,13 @@
+@using DbCourseWork.Utils
+@if (PageError.Has)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @PageError.ToString()
+        <button type="button" class="btn-close" @onclick="PageError.Clear" aria-label="Close"></button>
+    </div>
+}
+
+@code {
+    [CascadingParameter(Name = "PageError")]
+    private PageError PageError { get; set; } 
+}

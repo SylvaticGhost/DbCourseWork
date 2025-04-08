@@ -2,7 +2,9 @@
 @using Ardalis.Result
 @using DbCourseWork.Helpers
 @using DbCourseWork.Models
+@using DbCourseWork.Models.Enums
 @using DbCourseWork.Services
+@using DbCourseWork.Components.Elements
 @inject IRouteService RouteService
 
 <PageTitle>Маршрути</PageTitle>
@@ -43,7 +45,7 @@ else
             @foreach (var route in _routes)
             {
                 <tr>
-                    <td>@route.Number</td>
+                    <td><RouteNumberCode Number="@route.Number"/></td>
                     <td>@route.Name</td>
                     <td>@(((Operators)route.Operator).ToOfficialName())</td>
                     <td>@route.Vehicle.ToString()</td>

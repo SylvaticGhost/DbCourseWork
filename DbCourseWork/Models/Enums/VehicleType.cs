@@ -1,4 +1,4 @@
-namespace DbCourseWork.Models;
+namespace DbCourseWork.Models.Enums;
 
 public enum VehicleType
 {

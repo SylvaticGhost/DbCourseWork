@@ -1,0 +1,19 @@
+@using DbCourseWork.Models
+
+@if(Route is not null) {
+    <div class="card">
+        <div class="card-header">
+            <h3>Маршрут @Route.Number</h3>
+        </div>
+        <div class="card-body">
+            <p><strong>Назва:</strong> @Route.Name</p>
+            <p><strong>Оператор:</strong> @Route.OperatorFullName</p>
+            <p><strong>Вид транспорту:</strong> @Route.Vehicle.ToString()</p>
+        </div>
+    </div>
+} 
+
+@code {
+    [Parameter]
+    public Route? Route { get; set; }
+}

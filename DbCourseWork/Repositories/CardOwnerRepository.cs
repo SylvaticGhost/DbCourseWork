@@ -18,4 +18,14 @@ public class CardOwnerRepository(DataContext dataContext) : ICardOwnerRepository
 
         return dataContext.LoadData<CardOwner>(sql, parameters);
     }
+
+    public Task<CardOwner?> Find(int id)
+    {
+        const string sql = @"SELECT * FROM cards_owners
+                            WHERE id = @Id";
+        var parameters = new DynamicParameters();
+        parameters.Add("@Id", id);
+        
+        return dataContext.LoadDataSingle<CardOwner?>(sql, parameters);
+    }
 }

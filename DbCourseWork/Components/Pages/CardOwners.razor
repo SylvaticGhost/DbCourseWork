@@ -23,46 +23,46 @@
             </div>
         }
     </header>
-    <main style="display: flex; gap: 1rem;">
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Номер</th>
-                <th>Імʼя</th>
-                <th>По батькові</th>
-                <th>Прізвище</th>
-                <th>Дата народження</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (var cardOwner in _cardOwners ??  [])
+<main style="display: flex; gap: 1rem;">
+    <Table Striped Hoverable>
+        <TableHeader>
+            <TableRow>
+                <TableHeaderCell>Номер</TableHeaderCell>
+                <TableHeaderCell>Імʼя</TableHeaderCell>
+                <TableHeaderCell>По батькові</TableHeaderCell>
+                <TableHeaderCell>Прізвище</TableHeaderCell>
+                <TableHeaderCell>Дата народження</TableHeaderCell>
+            </TableRow>
+        </TableHeader>
+        <TableBody>
+            @foreach (var cardOwner in _cardOwners ?? [])
             {
-                <tr>
-                    <td>@cardOwner.Id</td>
-                    <td>@cardOwner.FirstName</td>
-                    <td>@cardOwner.MiddleName</td>
-                    <td>@cardOwner.LastName</td>
-                    <td>@cardOwner.BirthDate</td>
-                </tr>
+                <TableRow>
+                    <TableRowHeader><a href="@cardOwner.UrlOnPage">@cardOwner.Id</a></TableRowHeader>
+                    <TableRowCell>@cardOwner.FirstName</TableRowCell>
+                    <TableRowCell>@cardOwner.MiddleName</TableRowCell>
+                    <TableRowCell>@cardOwner.LastName</TableRowCell>
+                    <TableRowCell>@cardOwner.BirthDate</TableRowCell>
+                </TableRow>
             }
-            </tbody>
-        </table>
-        
+        </TableBody>
+    </Table>
 
-        @if (_cardOwners != null && _cardOwners.Any())
-        {
-            <div style="display: flex; gap: 1rem;">
-                @if (_page > 1)
-                {
-                    <button class="btn btn-primary" @onclick="@(() => ChangePage(-1))">Previous</button>
-                }
-                @if (_page * 10 <= _cardOwners.Count())
-                {
-                    <button class="btn btn-primary" @onclick="@(() => ChangePage(1))">Next</button>
-                }
-            </div>
-        }
-    </main>
+
+    @if (_cardOwners != null && _cardOwners.Any())
+    {
+        <div style="display: flex; gap: 1rem;">
+            @if (_page > 1)
+            {
+                <button class="btn btn-primary" @onclick="@(() => ChangePage(-1))">Previous</button>
+            }
+            @if (_page * 10 <= _cardOwners.Count())
+            {
+                <button class="btn btn-primary" @onclick="@(() => ChangePage(1))">Next</button>
+            }
+        </div>
+    }
+</main>
 </body>
 
 @code {

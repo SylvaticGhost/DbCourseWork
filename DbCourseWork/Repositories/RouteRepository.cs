@@ -1,5 +1,6 @@
 using Dapper;
 using DbCourseWork.Data;
+using DbCourseWork.Utils;
 
 namespace DbCourseWork.Repositories;
 
@@ -28,5 +29,12 @@ public class RouteRepository(DataContext dataContext) : IRouteRepository
         parameters.Add("Number", number);
         parameters.Add("Name", name);
         return dataContext.LoadDataSingle<bool>(sql, parameters);
+    }
+
+    public Task<Models.Route> GetRoute(string number)
+    {
+        const string sql = "SELECT * FROM routes WHERE number = @Number";
+        var parameters = DynamicParametersExtensions.WithSingleParameter("@Number", number);
+        return dataContext.LoadDataSingle<Models.Route>(sql, parameters);
     }
 }

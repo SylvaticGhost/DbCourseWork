@@ -1,3 +1,5 @@
+using DbCourseWork.Models.Enums;
+
 namespace DbCourseWork.Models;
 
 public record Route
@@ -18,4 +20,6 @@ public record Route
     public VehicleType Vehicle => VehicleMapper.GetFromAbbreviation(GetPrefix(Number));
 
     public static string GetPrefix(string number) => new (number.TakeWhile(char.IsLetter).ToArray());
+    
+    public string OperatorFullName => ((Operators)Operator).ToOfficialName();
 }

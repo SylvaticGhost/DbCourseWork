@@ -1,0 +1,26 @@
+@using DbCourseWork.Models
+@using DbCourseWork.Models.Enums
+
+<TableRowGroup Title="F">
+    @foreach (var vehicle in Vehicles.Where(v => v.Type == Type))
+    {
+        <TableRow>
+            <TableRowCell>@vehicle.Number</TableRowCell>
+            <TableRowCell>@vehicle.Type</TableRowCell>
+        </TableRow>
+    }
+    <TableRow>
+        <TableRowCell>1</TableRowCell>
+        <TableRowCell>@VehicleType.Автобус</TableRowCell>
+    </TableRow>
+</TableRowGroup>
+
+@code {
+    [Parameter]
+    public IEnumerable<Vehicle> Vehicles { get; set; } = [];
+    
+    [Parameter]
+    public VehicleType Type { get; set; }
+    
+    private string GetTitle() => Type.ToString();
+}

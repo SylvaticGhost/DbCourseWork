@@ -1,0 +1,59 @@
+@using Ardalis.Result
+@using DbCourseWork.Helpers
+@using DbCourseWork.Models
+@using DbCourseWork.Utils
+<FilePicker Placeholder="Завантажте Excel файл з транзакціями"
+            Multiple
+            Upload="OnFileUpload"
+            Filter="@ExcelHelper.FileFormatsAsString"
+            ShowMode="FilePickerShowMode.List"
+            Class="border-primary rounded p-2"/>
+
+@if (_transactions is not null) 
+{
+    <Table Striped Hoverable>
+        <TableHeader>
+            <TableRow>
+                <TableHeaderCell>МФО Банку</TableHeaderCell>
+                <TableHeaderCell>Рахунок</TableHeaderCell>
+                <TableHeaderCell>Сума</TableHeaderCell>
+                <TableHeaderCell>Дата</TableHeaderCell>
+                <TableHeaderCell>Id поїздки</TableHeaderCell>
+            </TableRow>
+        </TableHeader>
+        <TableBody>
+            @foreach (var transaction in _transactions)
+            {
+                <TableRow>
+                    <TableRowHeader>@transaction.Bin</TableRowHeader>
+                    <TableRowHeader>@transaction.Account</TableRowHeader>
+                    <TableRowCell>@transaction.Amount</TableRowCell>
+                    <TableRowCell>@transaction.Time</TableRowCell>
+                    <TableRowCell>@transaction.Ride</TableRowCell>
+                </TableRow>
+            }
+        </TableBody>
+    </Table>
+}
+
+@code {
+    [CascadingParameter(Name = "PageError")]
+    private PageError PageError { get; set; } = new();
+    
+    [CascadingParameter(Name = "ImportDataDto")]
+    private ImportDataDto ImportDataDto { get; set; } = new();
+    
+    private List<BankTransaction>? _transactions;
+
+    async Task OnFileUpload(FileUploadEventArgs e)
+    {
+        Result<List<BankTransaction>> result = 
+            await FileUploader.OnFileUpload(e, ExcelReader.ReadBankTransactions);
+        
+        FileUploader.HandleResult(result,ref _transactions, PageError);
+        Console.WriteLine($"Retrieved {_transactions?.Count} transactions");
+        ImportDataDto.BankTransactions = _transactions;
+        StateHasChanged();
+    }
+
+}

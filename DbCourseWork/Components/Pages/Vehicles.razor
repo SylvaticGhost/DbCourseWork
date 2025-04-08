@@ -1,0 +1,54 @@
+@page "/Vehicles"
+@using DbCourseWork.Models
+@using DbCourseWork.Services
+@using DbCourseWork.Components.Elements
+@inject IVehicleService VehicleService
+
+<PageTitle>Транспортні засоби</PageTitle>
+<h1>Транспортні засоби</h1>
+
+@if (_vehicles == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+
+<Table Striped Hoverable Bordered>
+    <TableHeader>
+        <TableRow>
+            <TableHeaderCell>Номер</TableHeaderCell>
+            <TableHeaderCell>Тип</TableHeaderCell>
+        </TableRow>
+    </TableHeader>
+    <TableBody>
+        @if (_vehicles is not null)
+        {
+            @foreach (var vehicle in _vehicles)
+            {
+                <TableRow>
+                    <TableRowCell>@vehicle.Number</TableRowCell>
+                    <TableRowCell>@vehicle.Type</TableRowCell>
+                </TableRow>
+            }
+        }
+    </TableBody>
+</Table>
+
+@code {
+    private IEnumerable<Vehicle>? _vehicles;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await VehicleService.GetAllVehicles();
+        if (result.IsSuccess)
+        {
+            _vehicles = result.Value;
+        }
+        else
+        {
+            Console.WriteLine(string.Join(';', result.Errors));
+        }
+    }
+
+}

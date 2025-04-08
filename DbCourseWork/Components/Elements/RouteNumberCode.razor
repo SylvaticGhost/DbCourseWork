@@ -1,0 +1,8 @@
+@using DbCourseWork.Models
+<a href="@Url">@Number.ToString()</a>
+@code {
+    [Parameter]
+    public RouteNumber Number { get; set; }
+    
+    private string Url => $"/RouteInfo/{Number}";
+}

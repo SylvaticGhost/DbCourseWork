@@ -1,0 +1,56 @@
+@using Ardalis.Result
+@using DbCourseWork.Helpers
+@using DbCourseWork.Models
+@using DbCourseWork.Utils
+<FilePicker Placeholder="Завантажте Excel файл з операціями"
+            Multiple
+            Upload="OnFileUpload"
+            Filter="@ExcelHelper.FileFormatsAsString"
+            ShowMode="FilePickerShowMode.List"
+            Class="border-primary rounded p-2"/>
+
+<Table Striped Hoverable>
+    <TableHeader>
+        <TableRow>
+            <TableHeaderCell>Проїзний квиток</TableHeaderCell>
+            <TableHeaderCell>Поїздка</TableHeaderCell>
+            <TableHeaderCell>Дата</TableHeaderCell>
+            <TableHeaderCell>Зміна кількості поїздок</TableHeaderCell>
+        </TableRow>
+    </TableHeader>
+    <TableBody>
+        @if (_operations is not null)
+        {
+            @foreach (var operation in _operations)
+            {
+                <TableRow>
+                    <TableRowHeader>@operation.Card</TableRowHeader>
+                    <TableRowHeader>@operation.Ride</TableRowHeader>
+                    <TableRowCell>@operation.Date</TableRowCell>
+                    <TableRowCell>@operation.Change</TableRowCell>
+                </TableRow>
+            }
+        }
+    </TableBody>
+</Table>
+
+@code {
+    [CascadingParameter(Name = "PageError")]
+    private PageError PageError { get; set; }  = new();
+    
+    [CascadingParameter(Name = "ImportDataDto")]
+    private ImportDataDto ImportDataDto { get; set; } = new();
+    
+    private List<CardOperation>? _operations;
+    
+    async Task OnFileUpload(FileUploadEventArgs e)
+    {
+        Result<List<CardOperation>> result =
+            await FileUploader.OnFileUpload(e, ExcelReader.ReadCardOperations);
+
+        FileUploader.HandleResult(result, ref _operations, PageError);
+        Console.WriteLine($"Retrieved {_operations?.Count} transactions");
+        ImportDataDto.CardOperations = _operations;
+        StateHasChanged();
+    }
+}

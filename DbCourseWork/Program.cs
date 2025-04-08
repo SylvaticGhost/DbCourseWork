@@ -1,3 +1,7 @@
+using Blazorise;
+using Blazorise.Bootstrap;
+using Blazorise.Bootstrap5;
+using Blazorise.Icons.FontAwesome;
 using Dapper;
 using DbCourseWork.Components;
 using DbCourseWork.Data;
@@ -20,6 +24,26 @@ builder.Services.AddScoped<IRouteRepository, RouteRepository>();
 builder.Services.AddScoped<IRouteService, RouteService>();
 builder.Services.AddScoped<ICardOwnerRepository, CardOwnerRepository>();
 builder.Services.AddScoped<ICardOwnerService, CardOwnerService>();
+builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
+builder.Services.AddScoped<IVehicleService, VehicleService>();
+builder.Services.AddScoped<ICardRepository, CardRepository>();
+builder.Services.AddScoped<ICardService, CardService>();
+builder.Services.AddScoped<IBankTransactionRepository, BankTransactionRepository>();
+builder.Services.AddScoped<ICardOperationRepository, CardOperationRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IDataImportService, DataImportService>();
+builder.Services.AddScoped<IRouteReportRepository, RouteReportRepository>();
+builder.Services.AddScoped<IRouteReportService, RouteReportService>();
+
+builder.Services
+    .AddBlazorise( options =>
+    {
+        options.Immediate = true;
+    } )
+    .AddBootstrap5Providers()
+    .AddBootstrap5Components()
+    .AddBootstrapComponents()
+    .AddFontAwesomeIcons();
 
 var app = builder.Build();
 

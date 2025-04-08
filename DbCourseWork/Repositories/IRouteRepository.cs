@@ -1,10 +1,14 @@
+using Route = DbCourseWork.Models.Route;
+
 namespace DbCourseWork.Repositories;
 
-public interface IRouteRepository
+public interface IRouteRepository : IRepository
 {
-    public Task<Models.Route[]> GetAllRoutes();
+    public Task<Route[]> GetAllRoutes();
 
-    public Task SaveRoute(Models.Route route);
+    public Task SaveRoute(Route route);
 
     public Task<bool> Exists(string number, string name);
+
+    public Task<Route> GetRoute(string number);
 }
