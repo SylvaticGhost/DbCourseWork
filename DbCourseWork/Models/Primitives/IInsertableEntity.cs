@@ -1,6 +1,6 @@
 namespace DbCourseWork.Models.Primitives;
 
-public interface IInsertableEntity
+public interface IInsertableEntity 
 {
     public string AsSqlRow();
     

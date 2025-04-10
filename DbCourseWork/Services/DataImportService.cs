@@ -14,7 +14,13 @@ public class DataImportService(IUnitOfWork unitOfWork) : IDataImportService
         if(dataDto.HasBankTransactions)
             await unit.Of<BankTransactionRepository>().InsertRange(dataDto.BankTransactions!);
 
-        if (dataDto.HasCards)
+        if (dataDto.HasCardOwners)
+            await unit.Of<CardOwnerRepository>().InsertRange(dataDto.CardOwners!);
+        
+        if (dataDto.HasTravelCards) 
+            await unit.Of<CardRepository>().InsertRange(dataDto.TravelCards!);
+        
+        if (dataDto.HasCardOperations)
             await unit.Of<CardOperationRepository>().InsertRange(dataDto.CardOperations!);
         
         return Result.Success();

@@ -1,6 +1,6 @@
 namespace DbCourseWork.Models.Primitives;
 
-public interface IDbEntity : IInsertableEntity
+public interface IDbEntity : IInsertableEntity, IReadOnlyDbEntity
 {
     
 }

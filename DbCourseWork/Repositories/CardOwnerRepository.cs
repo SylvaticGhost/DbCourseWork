@@ -4,8 +4,10 @@ using DbCourseWork.Models;
 
 namespace DbCourseWork.Repositories;
 
-public class CardOwnerRepository(DataContext dataContext) : ICardOwnerRepository
+public class CardOwnerRepository(DataContext dataContext) : Repository<CardOwner>(dataContext),ICardOwnerRepository
 {
+    private readonly DataContext _dataContext = dataContext;
+
     public Task<IEnumerable<CardOwner>> Search(int page = 1, int pageSize = 30, string search = "")
     {
         const string sql = @"SELECT * FROM cards_owners
@@ -16,7 +18,7 @@ public class CardOwnerRepository(DataContext dataContext) : ICardOwnerRepository
         parameters.Add("@PageSize", pageSize);
         parameters.Add("@Offset", (page - 1) * pageSize);
 
-        return dataContext.LoadData<CardOwner>(sql, parameters);
+        return _dataContext.LoadData<CardOwner>(sql, parameters);
     }
 
     public Task<CardOwner?> Find(int id)
@@ -26,6 +28,10 @@ public class CardOwnerRepository(DataContext dataContext) : ICardOwnerRepository
         var parameters = new DynamicParameters();
         parameters.Add("@Id", id);
         
-        return dataContext.LoadDataSingle<CardOwner?>(sql, parameters);
+        return _dataContext.LoadDataSingle<CardOwner?>(sql, parameters);
     }
+
+    protected override SortingField DefaultSortingField => new("id");
+    protected override string CollectionName => "cards_owners";
+    protected override string[] Columns => CardOwner.Columns;
 }

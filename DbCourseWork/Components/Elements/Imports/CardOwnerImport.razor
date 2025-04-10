@@ -1,0 +1,62 @@
+@using Ardalis.GuardClauses
+@using Ardalis.Result
+@using DbCourseWork.Helpers
+@using DbCourseWork.Models
+@using DbCourseWork.Utils
+<FilePicker Placeholder="Завантажте Excel файл з вдасниками карт"
+            Multiple
+            Filter="@ExcelHelper.FileFormatsAsString"
+            Upload="OnFileUpload"
+            ShowMode="FilePickerShowMode.List"
+            Class="border-primary rounded p-2"/>
+
+@if (_cardOwners is not null)
+{
+    <Table Striped Hoverable>
+        <TableHeader>
+            <TableRow>
+                <TableHeaderCell>id</TableHeaderCell>
+                <TableHeaderCell>Прізвище</TableHeaderCell>
+                <TableHeaderCell>Ім'я</TableHeaderCell>
+                <TableHeaderCell>По батькові</TableHeaderCell>
+                <TableHeaderCell>Дата народження</TableHeaderCell>
+            </TableRow>
+        </TableHeader>
+        <TableBody>
+            @foreach (var owner in _cardOwners)
+            {
+                <TableRow>
+                    <TableRowHeader>@owner.Id</TableRowHeader>
+                    <TableRowCell>@owner.LastName</TableRowCell>
+                    <TableRowCell>@owner.FirstName</TableRowCell>
+                    <TableRowCell>@owner.MiddleName</TableRowCell>
+                    <TableRowCell>@owner.BirthDate.ToString("yyyy MMMM dd")</TableRowCell>
+                </TableRow>
+            }
+        </TableBody>
+    </Table>
+}
+
+@code {
+    private List<CardOwner>? _cardOwners;
+    
+    [CascadingParameter(Name = "PageError")]
+    private PageError PageError { get; set; }  = new();
+    
+    [CascadingParameter(Name = "ImportDataDto")]
+    private ImportDataDto ImportDataDto { get; set; } = new();
+    
+    
+    private async Task OnFileUpload(FileUploadEventArgs e)
+    {
+        Guard.Against.Null(ImportDataDto);
+        Result<List<CardOwner>> result =
+            await FileUploader.OnFileUpload(e, ExcelReader.ReadCardOwners);
+        
+        FileUploader.HandleResult(result, ref _cardOwners, PageError);
+        Console.WriteLine($"Retrieved {_cardOwners?.Count} card owners");
+        ImportDataDto.CardOwners = _cardOwners;
+        StateHasChanged();
+    }
+
+}

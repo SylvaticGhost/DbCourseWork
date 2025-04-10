@@ -6,7 +6,7 @@ public class UnitOfWork(DataContext dataContext) : IUnitOfWork
 {
     private readonly Dictionary<Type, object> _repositories = new();
 
-    public TRepository Of<TRepository>() where TRepository : IRepository
+    public TRepository Of<TRepository>() where TRepository : IRepositoryInstance
     {
         if (_repositories.TryGetValue(typeof(TRepository), out object? repository))
             return (TRepository)repository;

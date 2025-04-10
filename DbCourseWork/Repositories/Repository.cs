@@ -5,9 +5,9 @@ using DbCourseWork.Utils;
 
 namespace DbCourseWork.Repositories;
 
-public abstract class Repository<TEntity>(DataContext dataContext) where TEntity : IInsertableEntity
+public abstract class Repository<TEntity>(DataContext dataContext) : ReadOnlyRepository<TEntity>(dataContext) where TEntity : IDbEntity
 {
-    protected abstract string CollectionName { get; }
+    private readonly DataContext _dataContext = dataContext;
     protected abstract string[] Columns { get; }
 
     public Task InsertRange(IEnumerable<TEntity> entities) 
@@ -17,6 +17,6 @@ public abstract class Repository<TEntity>(DataContext dataContext) where TEntity
             sb.AppendLine($"({entity.AsSqlRow()}),");
 
         var sql = sb.EndSql().ToString();
-        return dataContext.ExecuteSql(sql);
+        return _dataContext.ExecuteSql(sql);
     }
 }

@@ -1,8 +1,9 @@
 using DbCourseWork.Models.Enums;
+using DbCourseWork.Models.Primitives;
 
 namespace DbCourseWork.Models;
 
-public record Route
+public record Route : IFormTableEntity
 {
     public string Number { get; init; }
     
@@ -22,4 +23,9 @@ public record Route
     public static string GetPrefix(string number) => new (number.TakeWhile(char.IsLetter).ToArray());
     
     public string OperatorFullName => ((Operators)Operator).ToOfficialName();
+
+    public string[] RowDisplayValues => [Number, Name, ((Operators)Operator).ToOfficialName(), OperatorFullName];
+    public string? UrlOnPage => $"/RouteInfo/{Number}";
+
+    public static readonly string[] FormFields = ["Номер", "Назва", "Оператор", "Вид транспорту"];
 }

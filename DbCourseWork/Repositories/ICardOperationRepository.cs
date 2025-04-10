@@ -2,7 +2,7 @@ using DbCourseWork.Models;
 
 namespace DbCourseWork.Repositories;
 
-public interface ICardOperationRepository : IRepository
+public interface ICardOperationRepository : IRepositoryInstance
 {
     public Task InsertRange(IEnumerable<CardOperation> operations);
     

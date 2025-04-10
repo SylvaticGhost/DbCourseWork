@@ -1,9 +1,10 @@
 using Ardalis.GuardClauses;
+using DbCourseWork.Helpers;
 using DbCourseWork.Models.Primitives;
 
 namespace DbCourseWork.Models;
 
-public record Ride : IDbEntity
+public record Ride : IDbEntity, IFormTableEntity
 {
     public Guid Id { get; init; }
 
@@ -24,5 +25,10 @@ public record Ride : IDbEntity
 
     public static readonly string[] Columns = ["id", "vehicle", "route"];
 
-    public string AsSqlRow() => $"'{Id}', {Vehicle}, '{Route}'";
+    public static readonly string[] FormFields = ["id", "номер ТЗ", "маршрут"];
+
+    public string AsSqlRow() => $"'{Id}', {Vehicle}, '{LocalizationHelper.ToCyrillicLetters(Route)}'";
+    
+    public string[] RowDisplayValues => [Id.ToString(), Vehicle.ToString(), Route];
+    public string? UrlOnPage => null;
 }

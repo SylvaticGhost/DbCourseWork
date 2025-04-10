@@ -1,94 +1,176 @@
 @page "/CardOwners"
+@using Ardalis.Result
 @using DbCourseWork.Models
 @using DbCourseWork.Services
+@using DbCourseWork.Components.Elements
 @inject ICardOwnerService CardOwnerService
 
-<PageTitle>Власники карток</PageTitle>
-<h3>Власники карток</h3>
+<TableEntity
+    TEntity="CardOwner"
+    DisplayName="Власники карток"
+    Search="CardOwnerService.Search"
+    />
 
-@if (_cardOwners == null)
-{
-    <p>
-        <em>Loading...</em>
-    </p>
-}
-
-<body>
-    <header>
-        @if (!string.IsNullOrEmpty(_errorMessage))
-        {
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                @_errorMessage
-                <button type="button" class="btn-close" @onclick="ClearError" aria-label="Close"></button>
-            </div>
-        }
-    </header>
-<main style="display: flex; gap: 1rem;">
-    <Table Striped Hoverable>
-        <TableHeader>
-            <TableRow>
-                <TableHeaderCell>Номер</TableHeaderCell>
-                <TableHeaderCell>Імʼя</TableHeaderCell>
-                <TableHeaderCell>По батькові</TableHeaderCell>
-                <TableHeaderCell>Прізвище</TableHeaderCell>
-                <TableHeaderCell>Дата народження</TableHeaderCell>
-            </TableRow>
-        </TableHeader>
-        <TableBody>
-            @foreach (var cardOwner in _cardOwners ?? [])
-            {
-                <TableRow>
-                    <TableRowHeader><a href="@cardOwner.UrlOnPage">@cardOwner.Id</a></TableRowHeader>
-                    <TableRowCell>@cardOwner.FirstName</TableRowCell>
-                    <TableRowCell>@cardOwner.MiddleName</TableRowCell>
-                    <TableRowCell>@cardOwner.LastName</TableRowCell>
-                    <TableRowCell>@cardOwner.BirthDate</TableRowCell>
-                </TableRow>
-            }
-        </TableBody>
-    </Table>
-
-
-    @if (_cardOwners != null && _cardOwners.Any())
-    {
-        <div style="display: flex; gap: 1rem;">
-            @if (_page > 1)
-            {
-                <button class="btn btn-primary" @onclick="@(() => ChangePage(-1))">Previous</button>
-            }
-            @if (_page * 10 <= _cardOwners.Count())
-            {
-                <button class="btn btn-primary" @onclick="@(() => ChangePage(1))">Next</button>
-            }
-        </div>
-    }
-</main>
-</body>
-
-@code {
-    private string? _errorMessage;
-    private IEnumerable<CardOwner>? _cardOwners;
-    int _page = 1;
-    const int PageSize = 30;
-    
-    protected override async Task OnInitializedAsync()
-    {
-        var result = await CardOwnerService.Search(new SearchParameters(_page, 10));
-        
-        if (result.IsSuccess)
-        {
-            _cardOwners = result.Value;
-        }
-        else
-        {
-            _errorMessage = string.Join(';', result.Errors);
-        }
-    }
-
-    private void ChangePage(int move)
-    {
-        _page += move;
-    }
-    
-    private void ClearError() => _errorMessage = null;
-}
+@* <PageTitle>Власники карток</PageTitle> *@
+@* <h3>Власники карток</h3> *@
+@* *@
+@* @if (_cardOwners == null) *@
+@* { *@
+@*     <p> *@
+@*         <em>Loading...</em> *@
+@*     </p> *@
+@* } *@
+@* *@
+@* <body> *@
+@*     <header> *@
+@*         @if (!string.IsNullOrEmpty(_errorMessage)) *@
+@*         { *@
+@*             <div class="alert alert-danger alert-dismissible fade show" role="alert"> *@
+@*                 @_errorMessage *@
+@*                 <button type="button" class="btn-close" @onclick="ClearError" aria-label="Close"></button> *@
+@*             </div> *@
+@*         } *@
+@*         <div class="flex flex-row"> *@
+@*             <Pagination> *@
+@*                 <PaginationItem Disabled="@IsFirstPage()"> *@
+@*                     <PaginationLink @onclick="PrevPage"> *@
+@*                         <span aria-hidden="true">«</span> *@
+@*                     </PaginationLink> *@
+@*                 </PaginationItem> *@
+@*                 <PaginationItem Disabled="@true"> *@
+@*                     <PaginationLink> *@
+@*                         <span aria-hidden="true">@_page</span> *@
+@*                     </PaginationLink> *@
+@*                 </PaginationItem> *@
+@*                 <PaginationItem> *@
+@*                     <PaginationLink @onclick="NextPage"> *@
+@*                         <span aria-hidden="true">»</span> *@
+@*                     </PaginationLink> *@
+@*                 </PaginationItem> *@
+@*             </Pagination> *@
+@* *@
+@*             <div> *@
+@*                 <label>Розмір сторінки</label> *@
+@*                 <Select @bind-SelectedValue="@_pageSize" TValue="int"> *@
+@*                     @foreach (byte v in PageSizes) *@
+@*                     { *@
+@*                         <SelectItem Value="@v">@v</SelectItem> *@
+@*                     } *@
+@*                 </Select> *@
+@*             </div> *@
+@*         </div> *@
+@*     </header> *@
+@* <main style="display: flex; gap: 1rem;"> *@
+@*     <Table Striped Hoverable> *@
+@*         <TableHeader> *@
+@*             <TableRow> *@
+@*                 <TableHeaderCell>Номер</TableHeaderCell> *@
+@*                 <TableHeaderCell>Імʼя</TableHeaderCell> *@
+@*                 <TableHeaderCell>По батькові</TableHeaderCell> *@
+@*                 <TableHeaderCell>Прізвище</TableHeaderCell> *@
+@*                 <TableHeaderCell>Дата народження</TableHeaderCell> *@
+@*             </TableRow> *@
+@*         </TableHeader> *@
+@*         <TableBody> *@
+@*             @foreach (var cardOwner in _cardOwners ?? []) *@
+@*             { *@
+@*                 <TableRow> *@
+@*                     <TableRowHeader><a href="@cardOwner.UrlOnPage">@cardOwner.Id</a></TableRowHeader> *@
+@*                     <TableRowCell>@cardOwner.FirstName</TableRowCell> *@
+@*                     <TableRowCell>@cardOwner.MiddleName</TableRowCell> *@
+@*                     <TableRowCell>@cardOwner.LastName</TableRowCell> *@
+@*                     <TableRowCell>@cardOwner.BirthDate</TableRowCell> *@
+@*                 </TableRow> *@
+@*             } *@
+@*         </TableBody> *@
+@*     </Table> *@
+@* *@
+@* *@
+@*     @if (_cardOwners != null && _cardOwners.Any()) *@
+@*     { *@
+@*         <div style="display: flex; gap: 1rem;"> *@
+@*             @if (_page > 1) *@
+@*             { *@
+@*                 <button class="btn btn-primary" @onclick="@(() => ChangePage(-1))">Previous</button> *@
+@*             } *@
+@*             @if (_page * 10 <= _cardOwners.Count()) *@
+@*             { *@
+@*                 <button class="btn btn-primary" @onclick="@(() => ChangePage(1))">Next</button> *@
+@*             } *@
+@*         </div> *@
+@*     } *@
+@* </main> *@
+@* </body> *@
+@* *@
+@* @code { *@
+@*     public byte[] PageSizes { get; set; } = [5, 10, 30]; *@
+@*      *@
+@*     private string? _errorMessage; *@
+@*     private IEnumerable<CardOwner>? _cardOwners; *@
+@*     int _page = 1; *@
+@*     int _pageSize = 30; *@
+@* *@
+@*     int _lastPage = 0; *@
+@* *@
+@*     bool IsFirstPage() => _page == 1; *@
+@*      *@
+@*     private async Task ChangePage(int move) *@
+@*     { *@
+@*         _page += move; *@
+@*         await FetchData(); *@
+@*     } *@
+@* *@
+@*     private async Task PageSizeChanged(int newSize) *@
+@*     { *@
+@*         _pageSize = newSize; *@
+@*         _page = 1;  *@
+@*         await FetchData(); *@
+@*     } *@
+@*      *@
+@*     private async Task FetchData() *@
+@*     { *@
+@*         Result<IEnumerable<CardOwner>> result = await CardOwnerService.Search(new SearchParameters(_page, _pageSize)); *@
+@*          *@
+@*         if (result.IsSuccess)  *@
+@*             _cardOwners = result.Value; *@
+@*         else *@
+@*             _errorMessage = string.Join(';', result.Errors);  *@
+@*     } *@
+@* *@
+@*     void PrevPage() *@
+@*     { *@
+@*         if(_page == 1) *@
+@*             return; *@
+@*          *@
+@*         _page--; *@
+@*         _ = FetchData(); *@
+@*     } *@
+@* *@
+@*     void NextPage() *@
+@*     { *@
+@*         if (_lastPage != 0 && _page + 1 >= _lastPage) *@
+@*             return; *@
+@*          *@
+@*         _page++; *@
+@*         _ = FetchData(); *@
+@*     } *@
+@* *@
+@*      *@
+@*      *@
+@*     protected override async Task OnInitializedAsync() *@
+@*     { *@
+@*         var result = await CardOwnerService.Search(new SearchParameters(_page, 10)); *@
+@*          *@
+@*         if (result.IsSuccess) *@
+@*         { *@
+@*             _cardOwners = result.Value; *@
+@*         } *@
+@*         else *@
+@*         { *@
+@*             _errorMessage = string.Join(';', result.Errors); *@
+@*         } *@
+@*     } *@
+@*      *@
+@*      *@
+@*     private void ClearError() => _errorMessage = null; *@
+@* } *@

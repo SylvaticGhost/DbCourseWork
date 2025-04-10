@@ -1,6 +1,8 @@
+using DbCourseWork.Models.Primitives;
+
 namespace DbCourseWork.Models;
 
-public record BankTransaction
+public record BankTransaction : IDbEntity
 {
     public decimal Bin { get; private set; }
     public decimal Account { get; private set; }
@@ -16,4 +18,8 @@ public record BankTransaction
         Time = time;
         Ride = ride;
     }
+
+    public string AsSqlRow() => $"{Bin}, {Account}, {Amount}, '{Time}', '{Ride}'";
+    
+    public static readonly string[] Columns = ["bin", "account", "amount", "time", "ride"];
 }

@@ -7,7 +7,7 @@ namespace DbCourseWork.Services;
 
 public class CardService(ICardRepository cardRepository) : ICardService
 {
-    public Task<Result<IEnumerable<TravelCard>>> Search(CardSearchParam param) => 
+    public Task<Result<IEnumerable<TravelCard>>> Search(SearchParameters param) => 
         ResultExtensions.InErrorHandler(() => cardRepository.Get(param));
     
     public Task<Result<IEnumerable<TravelCard>>> GetCardForUser(int userId) =>

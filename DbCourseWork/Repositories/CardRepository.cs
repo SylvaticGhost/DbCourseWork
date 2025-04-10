@@ -2,32 +2,30 @@ using System.Text;
 using Dapper;
 using DbCourseWork.Data;
 using DbCourseWork.Models;
-using DbCourseWork.Models.Enums;
-using DbCourseWork.Utils;
 
 namespace DbCourseWork.Repositories;
 
-public class CardRepository(DataContext dataContext) : ICardRepository
+public class CardRepository(DataContext dataContext) : Repository<TravelCard>(dataContext),ICardRepository
 {
-    public Task<IEnumerable<TravelCard>> Get(CardSearchParam parameters)
-    {
-        var sb = new StringBuilder().AppendLine("SELECT * FROM travel_cards");
-
-        if (parameters.OrderFields?.Count > 0)
-        {
-            sb.AppendLine("ORDER BY");
-            foreach (SortingField<CardOrderField> field in parameters.OrderFields)
-            {
-                sb.AppendLine($"{field.Field} {field.Order}");
-                if (field != parameters.OrderFields.Last())
-                    sb.AppendLine(",");
-            }
-        }
-
-        var sql = sb.ToString();
-
-        return dataContext.LoadData<TravelCard>(sql);
-    }
+    // public Task<IEnumerable<TravelCard>> Get(CardSearchParam parameters)
+    // {
+    //     var sb = new StringBuilder().AppendLine("SELECT * FROM travel_cards");
+    //
+    //     if (parameters.OrderFields?.Count > 0)
+    //     {
+    //         sb.AppendLine("ORDER BY");
+    //         foreach (SortingField field in parameters.OrderFields)
+    //         {
+    //             sb.AppendLine($"{field.Field} {field.Order}");
+    //             if (field != parameters.OrderFields.Last())
+    //                 sb.AppendLine(",");
+    //         }
+    //     }
+    //
+    //     var sql = sb.ToString();
+    //
+    //     return dataContext.LoadData<TravelCard>(sql);
+    // }
 
     public Task<TravelCard?> Find(long code)
     {
@@ -44,4 +42,8 @@ public class CardRepository(DataContext dataContext) : ICardRepository
         parameters.Add("userId", userId);
         return dataContext.LoadData<TravelCard>(sql, parameters);
     }
+
+    protected override SortingField DefaultSortingField { get; } = new("code");
+    protected override string CollectionName => "travel_cards";
+    protected override string[] Columns => TravelCard.Columns;
 }

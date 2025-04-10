@@ -1,8 +1,9 @@
 using DbCourseWork.Models.Enums;
+using DbCourseWork.Models.Primitives;
 
 namespace DbCourseWork.Models;
 
-public record CardOperation
+public record CardOperation : IDbEntity
 {
     public long Card { get; private set; }
     
@@ -21,4 +22,8 @@ public record CardOperation
         Date = date;
         Change = change;
     }
+
+    public string AsSqlRow() => $"{Card}, '{Date}', {Change}, '{Ride}'  ";
+    
+    public static readonly string[] Columns = ["card", "date", "change", "ride"];
 }

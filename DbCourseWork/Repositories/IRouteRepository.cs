@@ -2,7 +2,7 @@ using Route = DbCourseWork.Models.Route;
 
 namespace DbCourseWork.Repositories;
 
-public interface IRouteRepository : IRepository
+public interface IRouteRepository : IRepositoryInstance
 {
     public Task<Route[]> GetAllRoutes();
 

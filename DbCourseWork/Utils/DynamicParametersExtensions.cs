@@ -10,4 +10,12 @@ public class DynamicParametersExtensions
         parameters.Add(name, value);
         return parameters;
     }
+
+    public static DynamicParameters Pagination(int page, int pageSize)
+    {
+        var parameters = new DynamicParameters();
+        parameters.Add("pageSize", pageSize);
+        parameters.Add("offset", (page - 1) * pageSize);
+        return parameters;
+    }
 }
