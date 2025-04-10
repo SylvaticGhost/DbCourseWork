@@ -3,7 +3,7 @@ using DbCourseWork.Models.Primitives;
 
 namespace DbCourseWork.Models;
 
-public record Route : IFormTableEntity
+public record Route : IFormTableEntity, IDbEntity
 {
     public string Number { get; init; }
     
@@ -28,4 +28,6 @@ public record Route : IFormTableEntity
     public string? UrlOnPage => $"/RouteInfo/{Number}";
 
     public static readonly string[] FormFields = ["Номер", "Назва", "Оператор", "Вид транспорту"];
+    public static readonly string[] Columns = ["number", "name", "operator", "vehicle"];
+    public string AsSqlRow() => $"('{Number}', '{Name}', {Operator})";
 }

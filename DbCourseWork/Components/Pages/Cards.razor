@@ -1,8 +1,6 @@
 @page "/Cards"
-@using Ardalis.Result
 @using DbCourseWork.Models
 @using DbCourseWork.Services
-@using DbCourseWork.Utils
 @using DbCourseWork.Components.Elements
 @inject ICardService CardService
 
@@ -11,66 +9,4 @@
     DisplayName="Проїзні картки"
     Search="CardService.Search"
     />
-
-@* <h3>Проїздні картки</h3> *@
-@* *@
-@* @if (!ContentLoaded()) *@
-@* { *@
-@*     <Loading/> *@
-@* } *@
-@* *@
-@* <body> *@
-@* <header> *@
-@*     <ErrorMessage Message="@_errorMessage" ClearError="@ClearError"/> *@
-@* </header> *@
-@* <main> *@
-@*     <Table Striped Hoverable> *@
-@*         <TableHeader> *@
-@*             <TableRow> *@
-@*                 <TableHeaderCell>Номер</TableHeaderCell> *@
-@*                 <TableHeaderCell>Власник</TableHeaderCell> *@
-@*                 <TableHeaderCell>Дата видачі</TableHeaderCell> *@
-@*                 <TableHeaderCell>Дата кінця</TableHeaderCell> *@
-@*             </TableRow> *@
-@*             @if (ContentLoaded()) *@
-@*             { *@
-@*                 <TableBody> *@
-@*                     @foreach (var card in _cards ?? []) *@
-@*                     { *@
-@*                         <TableRow> *@
-@*                             <TableRowHeader>@card.Code</TableRowHeader> *@
-@*                             <TableRowCell> *@
-@*                                 <a href="@($"/User/{card.OwnerId}")">@card.OwnerId</a> *@
-@*                             </TableRowCell> *@
-@*                             <TableRowCell>@card.ReleaseDate.ToString("dd/MM/yyyy")</TableRowCell> *@
-@*                             <TableRowCell>@card.ExpirationDate.ToString("dd/MM/yyyy")</TableRowCell> *@
-@*                         </TableRow> *@
-@*                     } *@
-@*                 </TableBody> *@
-@*             } *@
-@*         </TableHeader> *@
-@*     </Table> *@
-@* </main> *@
-@* </body> *@
-@* *@
-@* @code { *@
-@*     private string? _errorMessage; *@
-@*     private IEnumerable<TravelCard>? _cards; *@
-@*     private int _page = 1; *@
-@*     private const int PageSize = 30; *@
-@*      *@
-@*     protected override async Task OnInitializedAsync() *@
-@*     { *@
-@*         Result<IEnumerable<TravelCard>> result = await CardService.Search(new CardSearchParam(_page, PageSize, [])); *@
-@*         if (!result.IsSuccess) *@
-@*         { *@
-@*             _errorMessage = result.JoinErrorMessage(); *@
-@*             return; *@
-@*         } *@
-@* *@
-@*         _cards = result.Value; *@
-@*     } *@
-@*      *@
-@*     private bool ContentLoaded() => _cards != null; *@
-@*     private void ClearError() => _errorMessage = null; *@
-@* } *@
+    

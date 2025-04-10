@@ -2,7 +2,7 @@ using DbCourseWork.Models;
 
 namespace DbCourseWork.Repositories;
 
-public interface IVehicleRepository : IRepositoryInstance
+public interface IVehicleRepository : IRepository<Vehicle>
 {
     public Task<IEnumerable<Vehicle>> GetAllVehicles();
 

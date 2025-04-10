@@ -3,7 +3,7 @@ using DbCourseWork.Models.Primitives;
 
 namespace DbCourseWork.Models;
 
-public record Vehicle : IFormTableEntity
+public record Vehicle : IFormTableEntity, IDbEntity
 {
     public int Number { get; private set; }
 
@@ -20,4 +20,7 @@ public record Vehicle : IFormTableEntity
     public string? UrlOnPage => null;
 
     public static readonly string[] FormFields = ["номер", "тип"];
+    public string AsSqlRow() => $"({Number}, {(int)Type})";
+    
+    public static readonly string[] Columns = ["number", "type"];
 }

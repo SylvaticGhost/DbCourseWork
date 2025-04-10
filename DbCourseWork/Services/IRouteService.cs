@@ -4,7 +4,7 @@ using Route = DbCourseWork.Models.Route;
 
 namespace DbCourseWork.Services;
 
-public interface IRouteService
+public interface IRouteService : ISearchableService<Route>
 {
     public Task<Route[]> GetAllRoutes();
 

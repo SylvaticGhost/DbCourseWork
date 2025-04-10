@@ -6,7 +6,7 @@ using Route = DbCourseWork.Models.Route;
 
 namespace DbCourseWork.Services;
 
-public class RouteService(IRouteRepository repository) : IRouteService
+public class RouteService(IRouteRepository repository) : SearchableService<Route>(repository),IRouteService
 {
     public Task<Route[]> GetAllRoutes() => repository.GetAllRoutes();
 

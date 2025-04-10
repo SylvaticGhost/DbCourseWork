@@ -5,7 +5,7 @@ using ResultExtensions = DbCourseWork.Utils.ResultExtensions;
 
 namespace DbCourseWork.Services;
 
-public class VehicleService(IVehicleRepository vehicleRepository) : IVehicleService
+public class VehicleService(IVehicleRepository vehicleRepository) : SearchableService<Vehicle>(vehicleRepository),IVehicleService
 {
     public Task<Result<IEnumerable<Vehicle>>> GetAllVehicles() =>
         ResultExtensions.InErrorHandler(vehicleRepository.GetAllVehicles);
