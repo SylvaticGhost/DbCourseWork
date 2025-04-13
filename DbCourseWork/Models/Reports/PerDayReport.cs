@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace DbCourseWork.Models.Reports;
 
 public class PerDayReport
@@ -22,5 +24,15 @@ public class PerDayReport
         }
         
         return new PerDayReport(dict);
+    }
+
+    public override string ToString()
+    {
+        var sb = new StringBuilder();
+        foreach (var (day, usage) in _values)
+        {
+            sb.AppendLine($"{day}: {usage}");
+        }
+        return sb.ToString();
     }
 }

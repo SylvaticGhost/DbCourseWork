@@ -32,8 +32,8 @@
     
     IReadOnlyList<DateOnly?> selectedDates;
     
-    DateOnly? _startDate;
-    DateOnly? _endDate;
+    DateOnly? _startDate = DateOnly.Parse("2025-04-01");
+    DateOnly? _endDate = DateOnly.Parse("2025-04-06");
 
     private RouteReport? _report;
 
@@ -67,8 +67,9 @@
             _pageError.SetOnFailure(result);
             return;
         }
-        
+
         _report = result.Value;
+        Console.WriteLine(_report);
     }
 
 }

@@ -28,7 +28,7 @@ public abstract class ReadOnlyRepository<TEntity>(DataContext dataContext) where
                 sb.AppendLine(",");
         }
         
-        sb.AppendLine(@"LIMIT @PageSize OFFSET @Offset");
+        sb.AppendLine("LIMIT @PageSize OFFSET @Offset");
         var sqlParams = DynamicParametersExtensions.Pagination(parameters.Page, parameters.PageSize);
 
         if (parameters.HasWhereClause)

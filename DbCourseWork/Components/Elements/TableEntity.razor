@@ -22,7 +22,7 @@
                     </PaginationLink>
                 </PaginationItem>
                 <PaginationItem>
-                    <PaginationLink @onclick="NextPage">
+                    <PaginationLink onclick="@(async () => await NextPage())">
                         <span aria-hidden="true">»</span>
                     </PaginationLink>
                 </PaginationItem>
@@ -121,18 +121,19 @@
     {
         if (_page == 1)
             return;
-
+        Console.WriteLine("PrevPage");
         _page--;
         _ = FetchData();
     }
 
-    void NextPage()
+    private async Task NextPage()
     {
+        Console.WriteLine("NextPage");
         if (_lastPage != 0 && _page + 1 >= _lastPage)
             return;
-
         _page++;
-        _ = FetchData();
+        await FetchData();
+        StateHasChanged();
     }
 
     protected override Task OnInitializedAsync() => FetchData();

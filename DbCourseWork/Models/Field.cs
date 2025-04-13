@@ -1,3 +1,3 @@
 namespace DbCourseWork.Models;
 
-public record Field(string Name, Type Type);
+public record Field(string CodeName, string DbName, string DisplayName);

@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace DbCourseWork.Models.Reports;
 
 public record RouteReport
@@ -60,5 +62,23 @@ public record RouteReport
             PerDay = dayReport,
             PerHour = hourReport,
         };
+    }
+
+    public override string ToString()
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine($"Report for route {Number}");
+        sb.AppendLine($"From {StartDate} to {EndDate}");
+        sb.AppendLine($"Generated at {GeneratedAt}");
+        sb.AppendLine($"Total passengers: {TotalAmountOfPassenger}");
+        sb.AppendLine($"Total unique passengers: {AllUniquePassenger}");
+        sb.AppendLine($"Total amount of bank transactions: {SumOfBankTransactions}");
+        sb.AppendLine($"Total passengers by bank card: {AmountOfPassengerByBankCard}");
+        sb.AppendLine($"Total unique passengers by bank card: {UniqueByBankCard}");
+        sb.AppendLine($"Total passengers by travel card: {AmountOfPassengerByTravelCard}");
+        sb.AppendLine($"Total unique passengers by travel card: {UniqueByTravelCard}");
+        sb.AppendLine($"Per day report: {PerDay}");
+        sb.AppendLine($"Per hour report: {PerHour}");
+        return sb.ToString();
     }
 }

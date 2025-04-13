@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace DbCourseWork.Models.Reports;
 
 public class PerHourReport
@@ -23,6 +25,17 @@ public class PerHourReport
         }
         
         return new PerHourReport(dict);
+    }
+    
+    public override string ToString()
+    {
+        var sb = new StringBuilder();
+        foreach (var (hour, usage) in _values)
+        {
+            sb.AppendLine($"{hour}: {usage}");
+        }
+
+        return sb.ToString();
     }
     
 }

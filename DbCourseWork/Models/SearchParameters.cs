@@ -17,7 +17,6 @@ public record SearchParameters
     {
         Guard.Against.NegativeOrZero(page, nameof(page));
         Guard.Against.NegativeOrZero(pageSize, nameof(pageSize));
-        
         Page = page;
         PageSize = pageSize;
         OrderFields = orderFields;

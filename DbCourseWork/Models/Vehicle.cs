@@ -21,6 +21,8 @@ public record Vehicle : IFormTableEntity, IDbEntity
 
     public static readonly string[] FormFields = ["номер", "тип"];
     public string AsSqlRow() => $"({Number}, {(int)Type})";
-    
+
     public static readonly string[] Columns = ["number", "type"];
+
+    public static readonly Field[] SortingFields = [new(nameof(Number), "number", "номер")];
 }
