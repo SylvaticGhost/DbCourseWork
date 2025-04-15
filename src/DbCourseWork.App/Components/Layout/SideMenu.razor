@@ -1,0 +1,56 @@
+﻿<Bar Breakpoint="Breakpoint.Desktop" NavigationBreakpoint="Breakpoint.Tablet" ThemeContrast="ThemeContrast.Dark"
+     Mode="BarMode.VerticalInline" CollapseMode="BarCollapseMode.Small">
+    <BarToggler/>
+    <BarBrand>
+        <BarItem Style="height: max-content; margin-bottom: 20px;">
+            <BarLink To="">
+                <BarIcon IconName="customIcon"/>
+                <span>
+                    ДУТ
+                </span>
+            </BarLink>
+        </BarItem>
+    </BarBrand>
+    <BarMenu>
+        <BarStart>
+            <BarItem>
+                <BarLink To="/">
+                    <BarIcon IconName="IconName.Dashboard"/>
+                    Dashboard
+                </BarLink>
+            </BarItem>
+            <BarItem>
+                <BarLink class="nav-link" To="/DataImport">
+                    <span style="margin-right: 10px" aria-hidden="true"><Icon Name="IconName.Download"/></span> Імпорт даних
+                </BarLink>
+            </BarItem>
+            <BarItem>
+                <BarLink class="nav-link" To="/routes">
+                    <span style="margin-right: 10px" aria-hidden="true"><Icon Name="IconName.Map"/></span> Маршрути
+                </BarLink>
+            </BarItem>
+            <BarItem>
+                <BarLink class="nav-link" To="/Vehicles">
+                    <span style="margin-right: 10px" aria-hidden="true"><Icon Name="IconName.Bus"/></span> ТЗ
+                </BarLink>
+            </BarItem>
+            <BarItem>
+                <BarLink class="nav-link" To="/CardOwners">
+                    <span style="margin-right: 10px" aria-hidden="true"><Icon Name="IconName.UserFriends"/></span> Власники карток
+                </BarLink>
+            </BarItem>
+            <BarItem>
+                <BarLink class="nav-link" To="/Cards">
+                    <span style="margin-right: 10px" aria-hidden="true"><Icon Name="IconName.CreditCard"/></span> Картки
+                </BarLink>
+            </BarItem>
+        </BarStart>
+    </BarMenu>
+</Bar>
+
+@code {
+    private bool pagesBarVisible = true;
+
+    RenderFragment customIcon = @<img src="/brand-logo.png" style="width:32px; height: 32px"/>;
+
+}
