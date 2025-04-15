@@ -1,0 +1,12 @@
+﻿@page "/routes"
+@using Core.Models
+@using DbCourseWork.Services
+@using WebUI.Components.Elements
+@inject IRouteService RouteService
+
+<TableEntity
+    TEntity="Route"
+    DisplayName="Маршрути"
+    Search="RouteService.Search"
+    />
+    

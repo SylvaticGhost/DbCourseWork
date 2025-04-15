@@ -1,0 +1,11 @@
+@page "/CardOwners"
+@using Core.Models
+@using DbCourseWork.Services
+@using WebUI.Components.Elements
+@inject ICardOwnerService CardOwnerService
+
+<TableEntity
+    TEntity="CardOwner"
+    DisplayName="Власники карток"
+    Search="CardOwnerService.Search"
+    />

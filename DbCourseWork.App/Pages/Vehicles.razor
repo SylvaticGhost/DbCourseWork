@@ -1,0 +1,12 @@
+@page "/Vehicles"
+@using Core.Models
+@using DbCourseWork.Services
+@using WebUI.Components.Elements
+@inject IVehicleService VehicleService
+
+<TableEntity
+    TEntity="Vehicle"
+    DisplayName="Транспортні засоби"
+    Search="VehicleService.Search"
+    />
+    

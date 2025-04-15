@@ -1,0 +1,95 @@
+@page "/DataImport"
+@using Core.Models.DTOs
+@using DbCourseWork.Services
+@using DbCourseWork.Utils
+@using WebUI.Components.Elements.Imports
+@inject IDataImportService DataImportService
+<h1>Імпортувати дані</h1>
+
+<Modal @ref="_successModalRef">
+    <ModalContent Centered>
+        <ModalTitle>Успішно завантажено дані
+            <CloseButton/>
+        </ModalTitle>
+    </ModalContent>
+</Modal>
+
+<CascadingValue Value="@_pageError" Name="PageError">
+    <CascadingValue Value="@_importDataDto" Name="ImportDataDto">
+        <Tabs SelectedTab="@_selectedTab" SelectedTabChanged="@OnSelectedTabChanged">
+            <Items>
+                <Tab Name="rides">
+                    <h3>Поїздки</h3>
+                </Tab>
+                <Tab Name="transactions">
+                    <h3>Транзакції</h3>
+                </Tab>
+                <Tab Name="card-operations">
+                    <h3>Операції ПК</h3>
+                </Tab>
+                <Tab Name="card-owners">
+                    <h3>Власники ПК</h3>
+                </Tab>
+                <Tab Name="cards">
+                    <h3>Проїздні квитки</h3>
+                </Tab>
+            </Items>
+            <Content>
+                <TabPanel Name="rides">
+                    <RideImport/>
+                </TabPanel>
+                <TabPanel Name="transactions">
+                    <BankTransactionImport/>
+                </TabPanel>
+                <TabPanel Name="card-operations">
+                    <CardOperationImport/>
+                </TabPanel>
+                <TabPanel Name="card-owners">
+                    <CardOwnerImport/>
+                </TabPanel>
+                <TabPanel Name="cards">
+                    <CardImport/>
+                </TabPanel>
+            </Content>
+        </Tabs>
+        <div style="text-align: center; margin-top:  10px;">
+            <button class="btn btn-primary" @onclick="SendData">Підтвердити завантаження</button>
+        </div>
+    </CascadingValue>
+</CascadingValue>
+
+@code {
+    private string _selectedTab = "rides";
+    private readonly PageError _pageError = new();
+    private readonly ImportDataDto _importDataDto = new();
+
+    private Modal _successModalRef;
+
+    private Task OnSelectedTabChanged(string name)
+    {
+        Console.WriteLine("Changed to " + name);
+        _selectedTab = name;
+
+        return Task.CompletedTask;
+    }
+
+    private async Task SendData()
+    {
+        Console.WriteLine(_importDataDto);
+        var result = await DataImportService.ImportData(_importDataDto);
+
+        if (result.IsSuccess)
+        {
+            _ = ShowSuccessModal();
+            _importDataDto.Clear();
+        }
+        else
+        {
+            _pageError.SetOnFailure(result);
+        }
+    }
+
+    private Task ShowSuccessModal() => _successModalRef.Show();
+    private Task HideSuccessModal() => _successModalRef.Hide();
+}
+

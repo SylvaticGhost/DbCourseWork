@@ -1,0 +1,74 @@
+@page "/RouteInfo/{Number}"
+@using Ardalis.Result
+@using Core.Models
+@using Core.Models.Reports
+@using Core.Models.Systems
+@using DbCourseWork.Services
+@using DbCourseWork.Utils
+@using WebUI.Components.Elements
+@inject IRouteService RouteService
+@inject IRouteReportService RouteReportService
+
+<CascadingValue Value="_pageError" Name="PageError">
+    <CascadingPageError/>
+    <RouteInfoView Route="@_route"/>
+    <div>
+        <label>start date</label>
+        <input type="date" @bind="_startDate"/>
+        <label>end date</label>
+        <input type="date" @bind="_endDate"/>
+        <button class="btn btn-primary" @onclick="GenerateReport">Сформувати звіт</button>
+    </div>
+</CascadingValue>
+@code {
+
+    [Parameter]
+    public string? Number { get; set; }
+
+    private readonly PageError _pageError = new();
+
+    private Route? _route;
+    
+    IReadOnlyList<DateOnly?> selectedDates;
+    
+    DateOnly? _startDate = DateOnly.Parse("2025-04-01");
+    DateOnly? _endDate = DateOnly.Parse("2025-04-06");
+
+    private RouteReport? _report;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await RouteService.Find(Number ?? string.Empty);
+
+        if (!result.IsSuccess)
+        {
+            _pageError.SetOnFailure(result);
+            return;
+        }
+
+        _route = result.Value;
+    }
+
+    async Task GenerateReport()
+    {
+        if (_startDate == null || _endDate == null)
+        {
+            _pageError.Set("Please select start and end date");
+            return;
+        }
+        
+        var param = new RouteReportParam(RouteNumber.Parse(Number!), _startDate.Value, _endDate.Value);
+        
+        Result<RouteReport> result = await RouteReportService.GetReport(param);
+        
+        if (!result.IsSuccess)
+        {
+            _pageError.SetOnFailure(result);
+            return;
+        }
+
+        _report = result.Value;
+        Console.WriteLine(_report);
+    }
+
+}

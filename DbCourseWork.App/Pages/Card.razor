@@ -1,0 +1,76 @@
+@page "/Card/{Code:long}"
+@using Ardalis.Result
+@using Core.Models
+@using DbCourseWork.Services
+@using DbCourseWork.Utils
+@using WebUI.Components.Elements
+@inject ICardService CardService
+@inject ICardOwnerService CardOwnerService
+@inject ICardOperationService CardOperationService
+
+@if (!ContentLoaded())
+{
+    <Loading/>
+}
+else
+{
+    <body>
+    <header>
+        <ErrorMessage Message="@_errorMessage"/>
+        <h2>Картка @_card!.CodeAsString</h2>
+    </header>
+    <main>
+        <CardOwnerView CardOwner="@_cardOwner"/>
+    </main>
+    </body>
+    
+}
+
+@code {
+    [Parameter]
+    public long Code { get; set; }
+    
+    private string? _errorMessage;
+    
+    private TravelCard? _card;
+
+    private CardOwner? _cardOwner;
+
+    private IEnumerable<RideCardOperation>? _operations;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Result<TravelCard?> cardLoadResult = await CardService.Find(Code);
+        
+        if (!cardLoadResult.IsSuccess)
+        {
+            _errorMessage = cardLoadResult.JoinErrorMessage();
+            return;
+        }
+        
+        _card = cardLoadResult.Value;
+        
+        Result<CardOwner> cardOwnerLoadResult = await CardOwnerService.Find(_card!.OwnerId);
+        
+        if (!cardOwnerLoadResult.IsSuccess)
+        {
+            _errorMessage = cardOwnerLoadResult.JoinErrorMessage();
+            return;
+        }
+        _cardOwner = cardOwnerLoadResult.Value;
+
+        Result<IEnumerable<RideCardOperation>> operationsLoadResult = await CardOperationService.GetRides(_card.Code);
+        
+        if (!operationsLoadResult.IsSuccess)
+        {
+            _errorMessage = operationsLoadResult.JoinErrorMessage();
+            return;
+        }
+    }
+    
+    private bool ContentLoaded() => _card != null && _cardOwner != null;
+    
+    private void ClearError() => _errorMessage = null;
+
+    
+}

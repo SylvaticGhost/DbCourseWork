@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>Data</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Dapper" Version="2.1.66" />
+      <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0" />
+      <PackageReference Include="Npgsql" Version="9.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DbCourseWork.Core\DbCourseWork.Core.csproj" />
+      <ProjectReference Include="..\DbCourseWork.Utils\DbCourseWork.Utils.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Repositories\CardRepository.cs">
+        <DependentUpon>ICardRepository.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Repositories\BankTransactionRepository.cs">
+        <DependentUpon>IBankTransactionRepository.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Repositories\CardOwnerRepository.cs">
+        <DependentUpon>ICardOwnerRepository.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Repositories\RideRepository.cs">
+        <DependentUpon>IRideRepository.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Repositories\CardOperationRepository.cs">
+        <DependentUpon>ICardOperationRepository.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Repositories\VehicleRepository.cs">
+        <DependentUpon>IVehicleRepository.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Repositories\RouteRepository.cs">
+        <DependentUpon>IRouteRepository.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Repositories\RouteReportRepository.cs">
+        <DependentUpon>IRouteReportRepository.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+</Project>

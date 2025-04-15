@@ -1,0 +1,87 @@
+@page "/User/{UserId:int}"
+@using Ardalis.Result
+@using Core.Models
+@using DbCourseWork.Services
+@using DbCourseWork.Utils
+@using WebUI.Components.Elements
+@inject ICardOwnerService CardOwnerService
+@inject ICardService CardService
+
+@if (!ContentLoaded())
+{
+    <Loading/>
+}
+
+<body>
+<header>
+    <ErrorMessage Message="@_errorMessage" ClearError="@ClearError"/>
+</header>
+<main>
+    <CardOwnerView CardOwner="_cardOwner"/>
+    <h3>Картки</h3>
+    <Table>
+        <TableHeader>
+            <TableRow>
+                <TableHeaderCell>Номер</TableHeaderCell>
+                <TableHeaderCell>Дата видачі</TableHeaderCell>
+                <TableHeaderCell>Дата кінця</TableHeaderCell>
+            </TableRow>
+            @if (ContentLoaded())
+            {
+                <TableBody>
+                    @foreach (var card in _cards ?? [])
+                    {
+                        <TableRow>
+                            <TableRowHeader>@card.Code</TableRowHeader>
+                            <TableRowCell>@card.ReleaseDate.ToString("dd/MM/yyyy")</TableRowCell>
+                            <TableRowCell>@card.ExpirationDate.ToString("dd/MM/yyyy")</TableRowCell>
+                        </TableRow>
+                    }
+                </TableBody>
+            }
+        </TableHeader>
+    </Table>
+</main>
+</body>
+
+@code {
+
+    [Parameter]
+    public int UserId { get; set; }
+
+    private string? _errorMessage;
+
+    private CardOwner? _cardOwner;
+
+    private IEnumerable<TravelCard>? _cards;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Result<CardOwner> userLoadResult = await CardOwnerService.Find(UserId);
+
+        if (!userLoadResult.IsSuccess)
+        {
+            _errorMessage = userLoadResult.JoinErrorMessage();
+            return;
+        }
+
+        _cardOwner = userLoadResult.Value;
+
+        Result<IEnumerable<TravelCard>> cardLoadResult = await CardService.GetCardForUser(_cardOwner.Id);
+        
+        if (!cardLoadResult.IsSuccess)
+        {
+            _errorMessage = cardLoadResult.JoinErrorMessage();
+            return;
+        }
+        
+        _cards = cardLoadResult.Value;
+    }
+
+    private bool ContentLoaded()
+    {
+        return _cardOwner != null && _cardOwner.Id == UserId;
+    }
+
+    private void ClearError() => _errorMessage = null;
+}

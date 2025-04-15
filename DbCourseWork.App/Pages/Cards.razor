@@ -1,0 +1,12 @@
+@page "/Cards"
+@using Core.Models
+@using DbCourseWork.Services
+@using WebUI.Components.Elements
+@inject ICardService CardService
+
+<TableEntity
+    TEntity="TravelCard"
+    DisplayName="Проїзні картки"
+    Search="CardService.Search"
+    />
+    

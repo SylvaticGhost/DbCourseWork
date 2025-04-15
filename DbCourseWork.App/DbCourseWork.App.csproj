@@ -1,0 +1,58 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Version>1.7</Version>
+        <Authors>Megabit</Authors>
+        <Company>Megabit</Company>
+        <Description>
+            This is a Blazorise Template for a Blazor Server Application.
+            Blazorise is a component library built on top of Blazor and CSS frameworks like Bootstrap, FluentUI2, Tailwind, Bulma and Material.
+        </Description>
+        <Copyright>Copyright 2018-2024 Megabit</Copyright>
+        <RootNamespace>WebUI</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Blazorise" Version="1.7.*"/>
+        <PackageReference Include="Blazorise.Bootstrap" Version="1.7.*"/>
+        <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.7.*"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\DbCourseWork.Core\DbCourseWork.Core.csproj" />
+      <ProjectReference Include="..\..\DbCourseWork.Data\DbCourseWork.Data.csproj" />
+      <ProjectReference Include="..\..\DbCourseWork.Services\DbCourseWork.Services.csproj" />
+      <ProjectReference Include="..\..\DbCourseWork.Utils\DbCourseWork.Utils.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Components\TodoApp\TodoItem.razor" />
+      <_ContentIncludedByDefault Remove="Components\TodoApp\TodoItems.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="Components\Elements\CardOwnerView.razor" />
+      <AdditionalFiles Include="Components\Elements\CascadingPageError.razor" />
+      <AdditionalFiles Include="Components\Elements\ErrorMessage.razor" />
+      <AdditionalFiles Include="Components\Elements\Imports\BankTransactionImport.razor" />
+      <AdditionalFiles Include="Components\Elements\Imports\CardImport.razor" />
+      <AdditionalFiles Include="Components\Elements\Imports\CardOperationImport.razor" />
+      <AdditionalFiles Include="Components\Elements\Imports\CardOwnerImport.razor" />
+      <AdditionalFiles Include="Components\Elements\Imports\RideImport.razor" />
+      <AdditionalFiles Include="Components\Elements\Loading.razor" />
+      <AdditionalFiles Include="Components\Elements\RouteInfoView.razor" />
+      <AdditionalFiles Include="Components\Elements\RouteNumberCode.razor" />
+      <AdditionalFiles Include="Components\Elements\TableEntity.razor" />
+      <AdditionalFiles Include="Components\Elements\VehicleTableGroup.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+    </ItemGroup>
+
+</Project>
