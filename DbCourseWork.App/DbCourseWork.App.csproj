@@ -22,10 +22,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\DbCourseWork.Core\DbCourseWork.Core.csproj" />
-      <ProjectReference Include="..\..\DbCourseWork.Data\DbCourseWork.Data.csproj" />
-      <ProjectReference Include="..\..\DbCourseWork.Services\DbCourseWork.Services.csproj" />
-      <ProjectReference Include="..\..\DbCourseWork.Utils\DbCourseWork.Utils.csproj" />
+     <ProjectReference Include="..\DbCourseWork.Core\DbCourseWork.Core.csproj" />
+      <ProjectReference Include="..\DbCourseWork.Data\DbCourseWork.Data.csproj" />
+      <ProjectReference Include="..\DbCourseWork.Services\DbCourseWork.Services.csproj" />
+      <ProjectReference Include="..\DbCourseWork.Utils\DbCourseWork.Utils.csproj" />
     </ItemGroup>
 
     <ItemGroup>
