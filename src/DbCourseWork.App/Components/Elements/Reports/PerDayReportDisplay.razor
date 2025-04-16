@@ -1,0 +1,23 @@
+@using Ardalis.GuardClauses
+@using Core.Models.Reports
+
+@if(_passengerMetricParam is not null) {
+    <BarPlot Params="_passengerMetricParam" />
+}
+
+@code {
+    [Parameter]
+    public required PerDayReport PerDayReport { get; set; }
+
+    private MetricParams? _passengerMetricParam;
+    
+    protected override void OnInitialized()
+    {
+        Guard.Against.Null(PerDayReport);
+        _passengerMetricParam= new MetricBuilder<AllDailyUsage, PerDayReport>(PerDayReport)
+            .AddTitle("Пасажиропотік")
+            .AddDimension(x => x.PassengersByTravelCard, "Проїзні картки")
+            .AddDimension(x => x.PassengersByBankCard, "Банківські картки")
+            .Build();
+    }
+}

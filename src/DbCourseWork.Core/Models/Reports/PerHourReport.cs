@@ -2,12 +2,11 @@ using System.Text;
 
 namespace Core.Models.Reports;
 
-public class PerHourReport
+public record PerHourReport : PerTimeReport<int, AllHourlyUsage>
 {
     private const byte HoursInDay = 24;
-    private readonly IReadOnlyDictionary<int, AllHourlyUsage?> _values;
 
-    private PerHourReport(Dictionary<int, AllHourlyUsage?> dictionary) => _values = dictionary;
+    private PerHourReport(Dictionary<int, AllHourlyUsage?> dictionary) : base(dictionary) {}
 
     public static PerHourReport Create(IEnumerable<HourRowData> data)
     {
@@ -30,7 +29,7 @@ public class PerHourReport
     public override string ToString()
     {
         var sb = new StringBuilder();
-        foreach (var (hour, usage) in _values)
+        foreach (var (hour, usage) in Values)
         {
             sb.AppendLine($"{hour}: {usage}");
         }

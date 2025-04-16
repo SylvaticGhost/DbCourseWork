@@ -2,7 +2,7 @@ using Core.Enums;
 
 namespace Core.Models.Reports;
 
-public record AllHourlyUsage
+public record AllHourlyUsage : ITimeUsage
 {
     public int Hour { get; init; }
 

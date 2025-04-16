@@ -6,33 +6,45 @@
 @using DbCourseWork.Services
 @using DbCourseWork.Utils
 @using WebUI.Components.Elements
+@using WebUI.Components.Elements.Reports
 @inject IRouteService RouteService
 @inject IRouteReportService RouteReportService
 
 <CascadingValue Value="_pageError" Name="PageError">
     <CascadingPageError/>
     <RouteInfoView Route="@_route"/>
-    <div>
-        <label>start date</label>
-        <input type="date" @bind="_startDate"/>
-        <label>end date</label>
-        <input type="date" @bind="_endDate"/>
-        <button class="btn btn-primary" @onclick="GenerateReport">Сформувати звіт</button>
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 20px;">
+        <Addons Style="width: 300px">
+            <Addon AddonType="AddonType.Body">
+                <DatePicker @ref="@datePicker" TValue="DateTime?" @bind-Dates="@_selectedDates"
+                            Max="@DateTime.Today"
+                            SelectionMode="DateInputSelectionMode.Range"/>
+            </Addon>
+            <Addon AddonType="AddonType.End">
+                <Button Color="Color.Light" Clicked="@(() => datePicker.ToggleAsync())">
+                    <Icon Name="IconName.CalendarDay"/>
+                </Button>
+            </Addon>
+        </Addons>
+        <button class="btn btn-primary" style="margin-top: 10px" @onclick="GenerateReport">Сформувати звіт</button>
     </div>
+    @if (_report is not null)
+    {
+        <RouteReportDisplay RouteReport="_report"/>
+    }
 </CascadingValue>
-@code {
 
+@code {
+    DatePicker<DateTime?> datePicker;
+    
     [Parameter]
     public string? Number { get; set; }
 
     private readonly PageError _pageError = new();
 
     private Route? _route;
-    
-    IReadOnlyList<DateOnly?> selectedDates;
-    
-    DateOnly? _startDate = DateOnly.Parse("2025-04-01");
-    DateOnly? _endDate = DateOnly.Parse("2025-04-06");
+
+    IReadOnlyList<DateTime?>? _selectedDates;
 
     private RouteReport? _report;
 
@@ -51,16 +63,19 @@
 
     async Task GenerateReport()
     {
-        if (_startDate == null || _endDate == null)
+        var startDate = DateOnly.FromDateTime(_selectedDates?.FirstOrDefault() ?? DateTime.MinValue);
+        var endDate = DateOnly.FromDateTime(_selectedDates?.LastOrDefault() ?? DateTime.MinValue);
+        
+        if (startDate == default || endDate == default)
         {
             _pageError.Set("Please select start and end date");
             return;
         }
-        
-        var param = new RouteReportParam(RouteNumber.Parse(Number!), _startDate.Value, _endDate.Value);
-        
+
+        var param = new RouteReportParam(RouteNumber.Parse(Number!), startDate, endDate);
+
         Result<RouteReport> result = await RouteReportService.GetReport(param);
-        
+
         if (!result.IsSuccess)
         {
             _pageError.SetOnFailure(result);
@@ -69,6 +84,7 @@
 
         _report = result.Value;
         Console.WriteLine(_report);
+        StateHasChanged();
     }
 
 }

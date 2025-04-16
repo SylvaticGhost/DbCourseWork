@@ -43,5 +43,5 @@ return;
 void AddBlazorise(IServiceCollection services)
 {
     services.AddBlazorise();
-    services.AddBootstrapProviders().AddFontAwesomeIcons();
+    services.AddBootstrapProviders().AddFontAwesomeIcons().AddBootstrapComponents();
 }

@@ -1,0 +1,36 @@
+@using Core.Models.Reports
+
+@if(RouteReport is null) 
+{
+    <p>Звіт не знайдено.</p>
+    return;
+}
+
+<div class="route-report">
+    <h2>Звіт для маршруту @RouteReport.Number</h2>
+    <p>
+        <strong>З:</strong> @RouteReport.StartDate.ToString("yyyy MMMM dd")
+        <strong>До:</strong> @RouteReport.EndDate.ToString("yyyy MMMM dd")
+    </p>
+    <p><strong>Згенеровано:</strong> @RouteReport.GeneratedAt.ToString("yyyy-MM-dd HH:mm:ss")</p>
+    <p><strong>Всього пасажирів:</strong> @RouteReport.TotalAmountOfPassenger</p>
+    <p><strong>Всього унікальних пасажирів:</strong> @RouteReport.AllUniquePassenger</p>
+    <p><strong>Всього поїздок банківською картою:</strong> @RouteReport.AmountOfPassengerByBankCard</p>
+    <p><strong>Сума банківських транзакцій:</strong> @RouteReport.SumOfBankTransactions <span>ГРН</span></p>
+    <p><strong>Унікальних пасажирів по банківській карті:</strong> @RouteReport.UniqueByBankCard</p>
+    <p><strong>Всього пасажирів проїздним квитком:</strong> @RouteReport.AmountOfPassengerByTravelCard</p>
+    <p><strong>Всього унікальних пасажирів проїздним квитком:</strong> @RouteReport.UniqueByTravelCard</p>
+    @if (RouteReport.PerDay != null)
+    {
+        <PerDayReportDisplay PerDayReport="RouteReport.PerDay"/>
+    }
+    @if (RouteReport.PerHour != null)
+    {
+        <p><strong>Per Hour Report:</strong> @RouteReport.PerHour</p>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public required RouteReport RouteReport { get; set; }
+}

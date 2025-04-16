@@ -2,7 +2,7 @@ using Core.Enums;
 
 namespace Core.Models.Reports;
 
-public record AllDailyUsage
+public record AllDailyUsage : ITimeUsage
 {
     public DayOfWeek DayOfWeek { get; init; }
 

@@ -2,11 +2,9 @@ using System.Text;
 
 namespace Core.Models.Reports;
 
-public class PerDayReport
+public record PerDayReport : PerTimeReport<DayOfWeek, AllDailyUsage>
 {
-    private readonly IReadOnlyDictionary<DayOfWeek, AllDailyUsage?> _values;
-    
-    private PerDayReport(Dictionary<DayOfWeek, AllDailyUsage?> dictionary) => _values = dictionary;
+    private PerDayReport(Dictionary<DayOfWeek, AllDailyUsage?> dictionary) : base(dictionary) {}
     
     public static PerDayReport Create(IEnumerable<DayRowData> data)
     {
@@ -29,10 +27,12 @@ public class PerDayReport
     public override string ToString()
     {
         var sb = new StringBuilder();
-        foreach (var (day, usage) in _values)
+        foreach (var (day, usage) in Values)
         {
             sb.AppendLine($"{day}: {usage}");
         }
         return sb.ToString();
     }
+    
+    // public Dictionary<string, long[]> TravelCardVsBankCard() {}
 }

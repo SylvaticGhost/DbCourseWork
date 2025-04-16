@@ -1,0 +1,44 @@
+@using Core.Models.Reports
+<div class="p-1 border-1">
+    <h2>@Params.Title</h2>
+    @foreach ((string key, long[] values) in Params.Data)
+    {
+        <div class="d-flex align-items-center mt-1">
+            <label class="me-2 col-3">@key</label>
+            <Progress Size="Size.Medium" Value="@Convert.ToInt32(values.Sum())" Class="flex-grow-1">
+                @for (var i = 0; i < values.Length; i++)
+                {
+                    int i1 = i;
+                    int value = (int)values[i1];
+                    <ProgressBar
+                        Value="@value"
+                        Color="@Colors[i1 % Colors.Length]"/>
+                }
+            </Progress>
+            <span class="ms-2">@values.Sum()</span>
+        </div>
+    }
+    <div class="mt-2">
+        <h4>Позначення</h4>
+        @foreach (string item in Params.Legends)
+        {
+            <div class="flex-row">
+                <label>@item</label>
+                @* <ProgressBar Color="@Colors[Array.IndexOf(Params.Legends, item) % Colors.Length]" /> *@
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private static readonly Color[] Colors = [Color.Primary, Color.Secondary, Color.Success, Color.Info];
+    
+    [Parameter]
+    public required MetricParams Params { get; set; }
+    
+    // private int SumAsInt(ref long[] arr)
+    // {
+    //     _lastResult = Convert.ToInt32(arr.Sum());
+    //     _lastRef = arr.ToString();
+    // }
+}

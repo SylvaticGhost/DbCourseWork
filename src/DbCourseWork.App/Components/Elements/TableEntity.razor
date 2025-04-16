@@ -12,6 +12,11 @@
         <div class="flex flex-row">
             <Pagination>
                 <PaginationItem Disabled="@IsFirstPage()">
+                    <PaginationLink @onclick="ToFirstPage">
+                        <span aria-hidden="true">«««</span>
+                    </PaginationLink>
+                </PaginationItem>
+                <PaginationItem Disabled="@IsFirstPage()">
                     <PaginationLink @onclick="PrevPage">
                         <span aria-hidden="true">«</span>
                     </PaginationLink>
@@ -22,7 +27,7 @@
                     </PaginationLink>
                 </PaginationItem>
                 <PaginationItem>
-                    <PaginationLink onclick="@(async () => await NextPage())">
+                    <PaginationLink @onclick="NextPage">
                         <span aria-hidden="true">»</span>
                     </PaginationLink>
                 </PaginationItem>
@@ -30,7 +35,7 @@
 
             <div>
                 <label>Розмір сторінки</label>
-                <Select @bind-SelectedValue="@_pageSize" TValue="short">
+                <Select SelectedValue="@_pageSize" SelectedValueChanged="PageSizeChanged" TValue="short">
                     @foreach (byte v in PageSizes)
                     {
                         <SelectItem Value="@v">@v</SelectItem>
@@ -115,23 +120,21 @@
             _entities = result.Value;
         else
             _pageError.SetOnFailure(result);
+        
+        if (_pageSize != 0 && result.Value.Count() < _pageSize)
+            _lastPage = _page;
     }
 
-    void PrevPage()
-    {
-        if (_page == 1)
-            return;
-        Console.WriteLine("PrevPage");
-        _page--;
-        _ = FetchData();
-    }
+    private Task PrevPage() => ChangePage(p => p - 1, _page == 1);
 
-    private async Task NextPage()
+    private Task NextPage() => ChangePage(p => p + 1, _lastPage != 0 && _page + 1 > _lastPage);
+    
+    private Task ToFirstPage() => ChangePage(_ => 1, _page == 1);
+
+    private async Task ChangePage(Func<int, int> changeFunc, bool forceReturn = false)
     {
-        Console.WriteLine("NextPage");
-        if (_lastPage != 0 && _page + 1 >= _lastPage)
-            return;
-        _page++;
+        if (forceReturn) return;
+        _page = changeFunc(_page);
         await FetchData();
         StateHasChanged();
     }
@@ -148,7 +151,6 @@
     private static string[] LoadEntityColumns(Type type)
     {
         var field = type.GetField("FormFields");
-        var method = type.GetMethod("FormFields");
         if (field == null)
             throw new InvalidOperationException($"Type {type.Name} does not have a FormFields method.");
         
@@ -157,5 +159,4 @@
 
         return fields;
     }
-
 }
