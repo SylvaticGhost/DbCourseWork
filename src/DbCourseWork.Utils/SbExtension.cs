@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace DbCourseWork.Utils;
+namespace Utils;
 
 public static class SbExtension
 {

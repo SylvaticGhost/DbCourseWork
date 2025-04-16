@@ -1,6 +1,6 @@
 using Ardalis.Result;
 
-namespace DbCourseWork.Utils;
+namespace Utils;
 
 public static class ResultExtensions
 {

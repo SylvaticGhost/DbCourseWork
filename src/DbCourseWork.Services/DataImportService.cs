@@ -1,8 +1,9 @@
 using Ardalis.Result;
 using Core.Models.DTOs;
-using DbCourseWork.Repositories;
+using Data.Repositories;
+using Data.UnitOfWork;
 
-namespace DbCourseWork.Services;
+namespace Services;
 
 public class DataImportService(IUnitOfWork unitOfWork) : IDataImportService
 {

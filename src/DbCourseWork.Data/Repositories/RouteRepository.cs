@@ -1,10 +1,11 @@
 using Core.Models.Systems;
 using Dapper;
-using DbCourseWork.Data;
-using DbCourseWork.Utils;
+using Data.Abstracrtions;
+using Data.Context;
+using Data.Utils;
 using Route = Core.Models.Route;
 
-namespace DbCourseWork.Repositories;
+namespace Data.Repositories;
 
 public class RouteRepository(DataContext dataContext) : Repository<Route>(dataContext),IRouteRepository
 {

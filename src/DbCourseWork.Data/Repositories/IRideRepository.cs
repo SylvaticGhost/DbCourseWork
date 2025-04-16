@@ -1,6 +1,7 @@
 using Core.Models;
+using Data.Abstracrtions;
 
-namespace DbCourseWork.Repositories;
+namespace Data.Repositories;
 
 public interface IRideRepository : IRepositoryInstance
 {

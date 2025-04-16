@@ -1,7 +1,6 @@
 using Ardalis.Result;
-using DbCourseWork.Utils;
 
-namespace DbCourseWork.Helpers;
+namespace WebUI.Utils;
 
 public class FileUploader
 {

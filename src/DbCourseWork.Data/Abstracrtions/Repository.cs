@@ -1,9 +1,9 @@
 using System.Text;
 using Core.Interfaces;
-using DbCourseWork.Data;
-using DbCourseWork.Utils;
+using Data.Context;
+using Utils;
 
-namespace DbCourseWork.Repositories;
+namespace Data.Abstracrtions;
 
 public abstract class Repository<TEntity>(DataContext dataContext)
     : ReadOnlyRepository<TEntity>(dataContext), IRepository<TEntity> where TEntity : IDbEntity

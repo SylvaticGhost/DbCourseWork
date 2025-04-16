@@ -1,7 +1,6 @@
-using Ardalis.Result;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DbCourseWork.Services;
+namespace Services;
 
 public static class ServiceInjector
 {

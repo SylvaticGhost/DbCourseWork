@@ -1,10 +1,10 @@
-using System.Text;
 using Core.Models;
 using Core.Models.Systems;
 using Dapper;
-using DbCourseWork.Data;
+using Data.Abstracrtions;
+using Data.Context;
 
-namespace DbCourseWork.Repositories;
+namespace Data.Repositories;
 
 public class CardRepository(DataContext dataContext) : Repository<TravelCard>(dataContext),ICardRepository
 {

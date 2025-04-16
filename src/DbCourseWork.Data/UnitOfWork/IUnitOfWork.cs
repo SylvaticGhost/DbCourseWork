@@ -1,4 +1,6 @@
-namespace DbCourseWork.Repositories;
+using Data.Abstracrtions;
+
+namespace Data.UnitOfWork;
 
 public interface IUnitOfWork
 {

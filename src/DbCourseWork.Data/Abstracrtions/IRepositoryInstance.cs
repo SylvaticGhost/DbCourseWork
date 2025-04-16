@@ -1,3 +1,3 @@
-namespace DbCourseWork.Repositories;
+namespace Data.Abstracrtions;
 
 public interface IRepositoryInstance;

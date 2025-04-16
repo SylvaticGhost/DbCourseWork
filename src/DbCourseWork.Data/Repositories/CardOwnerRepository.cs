@@ -1,9 +1,10 @@
 using Core.Models;
 using Core.Models.Systems;
 using Dapper;
-using DbCourseWork.Data;
+using Data.Abstracrtions;
+using Data.Context;
 
-namespace DbCourseWork.Repositories;
+namespace Data.Repositories;
 
 public class CardOwnerRepository(DataContext dataContext) : Repository<CardOwner>(dataContext),ICardOwnerRepository
 {

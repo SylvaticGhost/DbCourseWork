@@ -1,6 +1,6 @@
 using Core.Models.Reports;
 
-namespace DbCourseWork.Repositories;
+namespace Data.Repositories;
 
 public interface IRouteReportRepository
 {

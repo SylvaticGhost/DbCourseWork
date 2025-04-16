@@ -1,7 +1,7 @@
 using Core.Enums;
 using Route = Core.Models.Route;
 
-namespace DbCourseWork.Helpers;
+namespace Core;
 
 public static class RouteValidator
 {

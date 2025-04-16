@@ -1,7 +1,7 @@
 using System.Data;
 using Dapper;
 
-namespace DbCourseWork.Data;
+namespace Data.Context;
 
 public class DateOnlyTypeHandler : SqlMapper.TypeHandler<DateOnly>
 {

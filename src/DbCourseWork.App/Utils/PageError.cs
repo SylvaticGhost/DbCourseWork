@@ -1,6 +1,7 @@
 using Ardalis.Result;
+using Utils;
 
-namespace DbCourseWork.Utils;
+namespace WebUI.Utils;
 
 public record PageError()
 {

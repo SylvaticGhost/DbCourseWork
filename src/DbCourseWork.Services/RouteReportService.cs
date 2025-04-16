@@ -1,9 +1,9 @@
 using Ardalis.Result;
 using Core.Models.Reports;
-using DbCourseWork.Repositories;
-using ResultExtensions = DbCourseWork.Utils.ResultExtensions;
+using Data.Repositories;
+using ResultExtensions = Utils.ResultExtensions;
 
-namespace DbCourseWork.Services;
+namespace Services;
 
 public class RouteReportService(IRouteReportRepository routeReportRepository) : IRouteReportService
 {

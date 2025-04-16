@@ -1,7 +1,7 @@
 using Ardalis.Result;
 using Core.Models.DTOs;
 
-namespace DbCourseWork.Services;
+namespace Services;
 
 public interface IDataImportService
 {

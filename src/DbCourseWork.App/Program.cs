@@ -1,7 +1,7 @@
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
 using Data;
-using DbCourseWork.Services;
+using Services;
 using WebUI;
 
 var builder = WebApplication.CreateBuilder(args);

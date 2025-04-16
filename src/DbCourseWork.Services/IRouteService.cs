@@ -2,7 +2,7 @@ using Ardalis.Result;
 using Core.Models.DTOs;
 using Route = Core.Models.Route;
 
-namespace DbCourseWork.Services;
+namespace Services;
 
 public interface IRouteService : ISearchableService<Route>
 {

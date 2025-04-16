@@ -1,7 +1,7 @@
 using Ardalis.Result;
 using Core.Models.Reports;
 
-namespace DbCourseWork.Services;
+namespace Services;
 
 public interface IRouteReportService
 {

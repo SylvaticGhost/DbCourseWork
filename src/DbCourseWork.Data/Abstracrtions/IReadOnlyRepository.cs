@@ -1,7 +1,7 @@
 using Core.Interfaces;
 using Core.Models.Systems;
 
-namespace DbCourseWork.Repositories;
+namespace Data.Abstracrtions;
 
 public interface IReadOnlyRepository<TEntity> : IRepositoryInstance where TEntity : IReadOnlyDbEntity
 {

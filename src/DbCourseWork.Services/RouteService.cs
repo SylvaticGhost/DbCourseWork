@@ -1,10 +1,10 @@
 using Ardalis.Result;
 using Core.Models.DTOs;
-using DbCourseWork.Repositories;
-using ResultExtensions = DbCourseWork.Utils.ResultExtensions;
+using Data.Repositories;
+using ResultExtensions = Utils.ResultExtensions;
 using Route = Core.Models.Route;
 
-namespace DbCourseWork.Services;
+namespace Services;
 
 public class RouteService(IRouteRepository repository) : SearchableService<Route>(repository),IRouteService
 {

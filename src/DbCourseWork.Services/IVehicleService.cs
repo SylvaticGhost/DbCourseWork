@@ -1,7 +1,7 @@
 using Ardalis.Result;
 using Core.Models;
 
-namespace DbCourseWork.Services;
+namespace Services;
 
 public interface IVehicleService : ISearchableService<Vehicle>
 {

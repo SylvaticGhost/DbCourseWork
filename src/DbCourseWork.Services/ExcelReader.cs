@@ -2,9 +2,9 @@ using Ardalis.Result;
 using ClosedXML.Excel;
 using Core.Models;
 using Core.Models.Systems;
-using DbCourseWork.Utils;
+using Utils;
 
-namespace DbCourseWork.Helpers;
+namespace Services;
 
 public static class ExcelReader
 {

@@ -1,6 +1,7 @@
-using DbCourseWork.Data;
+using Data.Abstracrtions;
+using Data.Context;
 
-namespace DbCourseWork.Repositories;
+namespace Data.UnitOfWork;
 
 public class UnitOfWork(DataContext dataContext) : IUnitOfWork
 {

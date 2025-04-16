@@ -1,10 +1,10 @@
 using Ardalis.Result;
 using Core.Interfaces;
 using Core.Models.Systems;
-using DbCourseWork.Repositories;
-using ResultExtensions = DbCourseWork.Utils.ResultExtensions;
+using Data.Abstracrtions;
+using ResultExtensions = Utils.ResultExtensions;
 
-namespace DbCourseWork.Services;
+namespace Services;
 
 public class SearchableService<TEntity>(IReadOnlyRepository<TEntity> repository)
     : ISearchableService<TEntity> where TEntity : IReadOnlyDbEntity, IFormTableEntity

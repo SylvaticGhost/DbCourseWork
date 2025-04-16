@@ -1,6 +1,7 @@
 using Dapper;
-using DbCourseWork.Data;
-using DbCourseWork.Repositories;
+using Data.Context;
+using Data.Repositories;
+using Data.UnitOfWork;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Data;
@@ -17,7 +18,7 @@ public static class DataInjector
         services.AddScoped<ICardRepository, CardRepository>();
         services.AddScoped<IBankTransactionRepository, BankTransactionRepository>();
         services.AddScoped<ICardOperationRepository, CardOperationRepository>();
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
         services.AddScoped<IRouteReportRepository, RouteReportRepository>();
     }
 }

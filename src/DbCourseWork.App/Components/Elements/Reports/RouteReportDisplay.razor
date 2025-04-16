@@ -1,26 +1,45 @@
 @using System.Globalization
 @using Core.Models.Reports
+@inject IJSRuntime JS
 
 @if(RouteReport is null) 
 {
     <p>Звіт не знайдено.</p>
     return;
 }
-
-<div class="route-report">
+<style>
+    #report {
+        font-family: "Times New Roman", sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
+        padding: 50px;
+        border-radius: 20px;
+        border: 10px #b32121;
+    }
+    .annotation {
+        font-size: 12px;
+    }
+</style>
+<div class="p-2" id="report">
+    <h3>Департамент управління транспорту</h3>
+    <hr/>
     <h2>Звіт для маршруту @RouteReport.Number</h2>
+    <hr/>
     <p>
         <strong>З:</strong> @RouteReport.StartDate.ToString("yyyy MMMM dd", new CultureInfo("uk-UA"))
-        <strong>До:</strong> @RouteReport.EndDate.ToString("yyyy MMMM dd", new CultureInfo("uk-UA"))
+        <strong>до:</strong> @RouteReport.EndDate.ToString("yyyy MMMM dd", new CultureInfo("uk-UA"))
     </p>
     <p><strong>Згенеровано:</strong> @RouteReport.GeneratedAt.ToString("yyyy-MM-dd HH:mm:ss")</p>
-    <p><strong>Всього пасажирів:</strong> @RouteReport.TotalAmountOfPassenger</p>
-    <p><strong>Всього унікальних пасажирів:</strong> @RouteReport.AllUniquePassenger</p>
+    <hr/>
     <p><strong>Всього поїздок банківською картою:</strong> @RouteReport.AmountOfPassengerByBankCard</p>
     <p><strong>Сума банківських транзакцій:</strong> @RouteReport.SumOfBankTransactions <span>ГРН</span></p>
     <p><strong>Унікальних пасажирів по банківській карті:</strong> @RouteReport.UniqueByBankCard</p>
+    <hr/>
     <p><strong>Всього пасажирів проїздним квитком:</strong> @RouteReport.AmountOfPassengerByTravelCard</p>
     <p><strong>Всього унікальних пасажирів проїздним квитком:</strong> @RouteReport.UniqueByTravelCard</p>
+    <hr/>
+    <p><strong>Всього пасажирів:</strong> @RouteReport.TotalAmountOfPassenger</p>
+    <p><strong>Всього унікальних пасажирів:</strong> @RouteReport.AllUniquePassenger</p>
     @if (RouteReport.PerDay != null)
     {
         <PerDayReportDisplay PerDayReport="RouteReport.PerDay"/>
@@ -29,9 +48,19 @@
     {
         <PerHourReportDisplay PerHourReport="RouteReport.PerHour"/>
     }
+    <p class="pt-2 annotation">Згенеровано автоматично</p>
+    <p class="pb-2 annotation">Внутрішня документація</p>
+
 </div>
+<button class="btn btn-primary my-4 flex flex-row" @onclick="ExportToPdf">Завантажити PDF</button>
+
 
 @code {
     [Parameter]
     public required RouteReport? RouteReport { get; set; }
+    
+    private async Task ExportToPdf()
+    {
+        await JS.InvokeVoidAsync("exportToPdf", "report", $"route-report-{RouteReport.Number}.pdf");
+    }
 }

@@ -1,8 +1,7 @@
 using Ardalis.Result;
 using Core.Models;
-using Core.Models.Systems;
 
-namespace DbCourseWork.Services;
+namespace Services;
 
 public interface ICardService : ISearchableService<TravelCard>
 {

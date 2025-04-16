@@ -1,9 +1,10 @@
 using Core.Models;
 using Core.Models.Systems;
-using DbCourseWork.Data;
-using DbCourseWork.Utils;
+using Data.Abstracrtions;
+using Data.Context;
+using Data.Utils;
 
-namespace DbCourseWork.Repositories;
+namespace Data.Repositories;
 
 public class CardOperationRepository(DataContext dataContext)
     : Repository<CardOperation>(dataContext), ICardOperationRepository

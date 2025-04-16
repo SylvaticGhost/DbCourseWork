@@ -1,6 +1,6 @@
 using Npgsql;
 
-namespace DbCourseWork.Data;
+namespace Data.Context;
 
 public static class ConnectionExtensions
 {

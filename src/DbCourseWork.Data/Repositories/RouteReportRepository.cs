@@ -1,9 +1,9 @@
 using System.Data;
 using Core.Models.Reports;
 using Dapper;
-using DbCourseWork.Data;
+using Data.Context;
 
-namespace DbCourseWork.Repositories;
+namespace Data.Repositories;
 
 public class RouteReportRepository(DataContext dataContext) : IRouteReportRepository
 {

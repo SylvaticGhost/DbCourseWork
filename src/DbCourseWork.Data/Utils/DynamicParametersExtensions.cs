@@ -1,6 +1,6 @@
 using Dapper;
 
-namespace DbCourseWork.Utils;
+namespace Data.Utils;
 
 public class DynamicParametersExtensions
 {

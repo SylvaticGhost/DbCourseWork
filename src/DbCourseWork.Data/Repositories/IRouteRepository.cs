@@ -1,6 +1,7 @@
+using Data.Abstracrtions;
 using Route = Core.Models.Route;
 
-namespace DbCourseWork.Repositories;
+namespace Data.Repositories;
 
 public interface IRouteRepository : IRepository<Route>
 {

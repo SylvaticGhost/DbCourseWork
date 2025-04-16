@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace DbCourseWork.Helpers;
+namespace Utils;
 
 public class LocalizationHelper
 {

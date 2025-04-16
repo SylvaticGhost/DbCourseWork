@@ -1,10 +1,9 @@
 using Ardalis.Result;
 using Core.Models;
-using Core.Models.Systems;
-using DbCourseWork.Repositories;
-using ResultExtensions = DbCourseWork.Utils.ResultExtensions;
+using Data.Repositories;
+using ResultExtensions = Utils.ResultExtensions;
 
-namespace DbCourseWork.Services;
+namespace Services;
 
 public class CardService(ICardRepository cardRepository) : SearchableService<TravelCard>(cardRepository),ICardService
 {

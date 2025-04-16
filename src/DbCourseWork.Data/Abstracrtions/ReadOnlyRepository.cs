@@ -2,10 +2,10 @@ using System.Text;
 using Ardalis.GuardClauses;
 using Core.Interfaces;
 using Core.Models.Systems;
-using DbCourseWork.Data;
-using DbCourseWork.Utils;
+using Data.Context;
+using Data.Utils;
 
-namespace DbCourseWork.Repositories;
+namespace Data.Abstracrtions;
 
 public abstract class ReadOnlyRepository<TEntity>(DataContext dataContext) where TEntity : IReadOnlyDbEntity
 {

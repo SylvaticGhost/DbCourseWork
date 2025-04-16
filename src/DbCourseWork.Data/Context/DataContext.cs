@@ -1,8 +1,8 @@
 using Dapper;
-using Npgsql;
 using Microsoft.Extensions.Configuration;
+using Npgsql;
 
-namespace DbCourseWork.Data;
+namespace Data.Context;
 
 public class DataContext
 {
@@ -22,22 +22,6 @@ public class DataContext
         _connection = new NpgsqlConnection(_connectionString);
     }
 
-    public async Task<TResult> InTransaction<TResult>(Func<NpgsqlConnection, Task<TResult>> action)
-    {
-        var transaction = await _connection.BeginTransactionAsync();
-        try
-        {
-            var result = await action(_connection);
-            await transaction.CommitAsync();
-            return result;
-        }
-        catch (Exception)
-        {
-            await transaction.RollbackAsync();
-            throw;
-        }
-    }
-
     private static Task<T> InSqlLog<T>(Task<T> task, string sql)
     {
         if (LogSql)
@@ -55,8 +39,6 @@ public class DataContext
 
     public Task<bool> ExecuteSql(string sql) =>
         InSqlLog(_connection.ExecuteAsync(sql).ContinueWith(t => t.Result > 0), sql);
-
-    public Task<int> ExecuteSqlWithRowCount(string sql) => InSqlLog(_connection.ExecuteAsync(sql), sql);
 
     public Task<bool> ExecuteSql(string sql, DynamicParameters parameters) =>
         InSqlLog(_connection.ExecuteAsync(sql, parameters).ContinueWith(t => t.Result > 0), sql);
