@@ -1,4 +1,5 @@
 using System.Text;
+using Utils;
 
 namespace Core.Models.Reports;
 
@@ -10,8 +11,9 @@ public record PerDayReport : PerTimeReport<DayOfWeek, AllDailyUsage>
     {
         IEnumerable<DayRowData> dayRowDatas = data as DayRowData[] ?? data.ToArray();
         var dict = new Dictionary<DayOfWeek, AllDailyUsage?>();
-        
-        foreach (var day in Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>())
+
+        IEnumerable<DayOfWeek> days = Enum.GetValues<DayOfWeek>().OrderByUkrDayOrder();
+        foreach (var day in days)
         {
             DayRowData[] row = dayRowDatas.Where(x => x.Day == day).ToArray();
 

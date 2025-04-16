@@ -1,4 +1,5 @@
 using Core.Enums;
+using Utils;
 
 namespace Core.Models.Reports;
 
@@ -19,6 +20,8 @@ public record AllDailyUsage : ITimeUsage
     public long UniquePassengers => UniquePassengersByTravelCard + UniquePassengersByBankCard;
 
     private AllDailyUsage() { }
+    
+    public string KeyToUkrString() => DayOfWeek.ToUkrString();
 
     public static AllDailyUsage Create(DayRowData[] row)
     {

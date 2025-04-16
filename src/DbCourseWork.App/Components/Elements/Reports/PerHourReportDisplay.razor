@@ -1,0 +1,24 @@
+@using Ardalis.GuardClauses
+@using Core.Models.Reports
+@if (_passengerMetricParam is not null)
+{
+    <BarPlot Params="_passengerMetricParam" />
+}
+
+@code {
+    [Parameter]
+    public required PerHourReport PerHourReport { get; set; }
+
+    private MetricParams? _passengerMetricParam;
+
+    protected override void OnInitialized()
+    {
+        Guard.Against.Null(PerHourReport);
+        
+        _passengerMetricParam = new MetricBuilder<AllHourlyUsage, PerHourReport>(PerHourReport)
+            .AddTitle("Пасажиропотік по годинам")
+            .AddDimension(x => x.PassengersByTravelCard, "Проїзні картки")
+            .AddDimension(x => x.PassengersByBankCard, "Банківські картки")
+            .Build();
+    }
+}

@@ -1,44 +1,125 @@
+@using Ardalis.GuardClauses
+@using Blazorise.Charts
 @using Core.Models.Reports
-<div class="p-1 border-1">
-    <h2>@Params.Title</h2>
-    @foreach ((string key, long[] values) in Params.Data)
-    {
-        <div class="d-flex align-items-center mt-1">
-            <label class="me-2 col-3">@key</label>
-            <Progress Size="Size.Medium" Value="@Convert.ToInt32(values.Sum())" Class="flex-grow-1">
-                @for (var i = 0; i < values.Length; i++)
-                {
-                    int i1 = i;
-                    int value = (int)values[i1];
-                    <ProgressBar
-                        Value="@value"
-                        Color="@Colors[i1 % Colors.Length]"/>
-                }
-            </Progress>
-            <span class="ms-2">@values.Sum()</span>
-        </div>
+
+<style>
+    .chart-container {
+        width: 60%;
     }
-    <div class="mt-2">
-        <h4>Позначення</h4>
-        @foreach (string item in Params.Legends)
-        {
-            <div class="flex-row">
-                <label>@item</label>
-                @* <ProgressBar Color="@Colors[Array.IndexOf(Params.Legends, item) % Colors.Length]" /> *@
-            </div>
-        }
+</style>
+<div class="p-1 border-1 chart-container mt-2">
+    <h3>@Params.Title</h3>
+    <BarChart @ref="_barChart" TItem="long" Options="@_options"/>
+
+    <div class="mt-4">
+        <h4>Легенда</h4>
+        <div class="d-flex flex-wrap">
+            @for (var i = 0; i < Params.Legends.Length; i++)
+            {
+                <div class="me-3 mb-2 d-flex align-items-center">
+                    <div
+                        style="width: 20px; height: 20px; background-color: @GetColorCode(i)"
+                        class="me-1 m-1"></div>
+                    <span>@Params.Legends[i]</span>
+                </div>
+            }
+        </div>
     </div>
 </div>
 
 @code {
-    private static readonly Color[] Colors = [Color.Primary, Color.Secondary, Color.Success, Color.Info];
-    
     [Parameter]
     public required MetricParams Params { get; set; }
     
-    // private int SumAsInt(ref long[] arr)
-    // {
-    //     _lastResult = Convert.ToInt32(arr.Sum());
-    //     _lastRef = arr.ToString();
-    // }
+    BarChart<long>? _barChart;
+
+    BarChartOptions? _options;
+
+    protected override void OnInitialized()
+    {
+        _options = new BarChartOptions
+        {
+            IndexAxis = "y",
+            Elements = new ChartElements
+            {
+                Bar = new ChartBarElements
+                {
+                    BorderWidth = 1,
+                }
+            },
+            Responsive = true,
+            Plugins = new ChartPlugins
+            {
+                Legend = new ChartLegend
+                {
+                    Display = false
+                },
+                Title = new ChartTitle
+                {
+                    Display = false
+                }
+            },
+            Scales = new ChartScales
+            {
+                X = new ChartAxis
+                {
+                    BeginAtZero = true
+                }
+            }
+        };
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await InitializeChartAsync();
+        }
+    }
+
+    private async Task InitializeChartAsync()
+    {
+        Guard.Against.Null(_barChart);
+
+        await _barChart.Clear();
+
+        string[] labels = Params.Data.Keys.ToArray();
+
+        var datasets = new List<BarChartDataset<long>>();
+
+        for (var i = 0; i < Params.Legends.Length; i++)
+        {
+            var dataset = new BarChartDataset<long>
+            {
+                Label = Params.Legends[i],
+                BackgroundColor = new[] { GetColorCode(i) },
+                BorderColor = GetColorCode(i),
+                BorderWidth = 1,
+                Data = []
+            };
+
+            foreach (string key in labels)
+            {
+                long[] values = Params.Data[key];
+                dataset.Data.Add(i < values.Length ? values[i] : 0);
+            }
+
+            datasets.Add(dataset);
+        }
+
+        await _barChart.AddLabelsDatasetsAndUpdate(labels, datasets.ToArray());
+    }
+
+    private string GetColorCode(int color)
+    {
+        return color switch
+        {
+            0 => "#3B82F6", // Blue
+            1 => "#10B981", // Green
+            2 => "#3ABFF8", // Light blue
+            3 => "#6B7280", // Gray
+            _ => "#3B82F6" // Default
+        };
+    }
+
 }

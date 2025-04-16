@@ -5,19 +5,32 @@
     <BarPlot Params="_passengerMetricParam" />
 }
 
+@if (_uniqPassengerMetricParam is not null)
+{
+    <BarPlot Params="_uniqPassengerMetricParam"/>
+}
+
 @code {
     [Parameter]
     public required PerDayReport PerDayReport { get; set; }
 
     private MetricParams? _passengerMetricParam;
     
+    private MetricParams? _uniqPassengerMetricParam;
+    
     protected override void OnInitialized()
     {
         Guard.Against.Null(PerDayReport);
         _passengerMetricParam= new MetricBuilder<AllDailyUsage, PerDayReport>(PerDayReport)
-            .AddTitle("Пасажиропотік")
+            .AddTitle("Пасажиропотік по дням")
             .AddDimension(x => x.PassengersByTravelCard, "Проїзні картки")
             .AddDimension(x => x.PassengersByBankCard, "Банківські картки")
+            .Build();
+        
+        _uniqPassengerMetricParam = new MetricBuilder<AllDailyUsage, PerDayReport>(PerDayReport)
+            .AddTitle("Кількість унікальних пасажирів по дням")
+            .AddDimension(x => x.UniquePassengersByTravelCard, "Проїзні картки")
+            .AddDimension(x => x.UniquePassengersByBankCard, "Банківські картки")
             .Build();
     }
 }

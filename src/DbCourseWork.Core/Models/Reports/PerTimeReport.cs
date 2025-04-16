@@ -1,3 +1,5 @@
+using Utils;
+
 namespace Core.Models.Reports;
 
 public abstract record PerTimeReport<TKey, TUsage> : IReport<TUsage> where TKey : notnull where TUsage : ITimeUsage
@@ -13,15 +15,24 @@ public abstract record PerTimeReport<TKey, TUsage> : IReport<TUsage> where TKey 
         {
             if (usage is null)
             {
-                result.Add(key.ToString()!, []);
+                result.Add(FormatKey(key), []);
                 continue;
             }
 
             List<long> values = [];
             values.AddRange(dimensions.Select(dimension => dimension(usage)));
-            result.Add(key.ToString()!, values.ToArray());
+            result.Add(usage.KeyToUkrString(), values.ToArray());
         }
 
         return result;
+    }
+
+    private static string FormatKey(TKey key)
+    {
+        if (typeof(TKey) != typeof(DayOfWeek))
+            return key.ToString()!;
+        
+        var dayOfWeek = (DayOfWeek)(object)key;
+        return dayOfWeek.ToUkrString();
     }
 }

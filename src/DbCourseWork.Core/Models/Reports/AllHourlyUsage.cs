@@ -33,4 +33,6 @@ public record AllHourlyUsage : ITimeUsage
             PassengersByBankCard = Convert.ToUInt32(bankCardRoute?.Passengers)
         };
     }
+
+    public string KeyToUkrString() => Hour.ToString();
 }

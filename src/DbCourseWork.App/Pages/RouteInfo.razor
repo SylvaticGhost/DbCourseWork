@@ -18,6 +18,7 @@
             <Addon AddonType="AddonType.Body">
                 <DatePicker @ref="@datePicker" TValue="DateTime?" @bind-Dates="@_selectedDates"
                             Max="@DateTime.Today"
+                            FirstDayOfWeek="DayOfWeek.Monday"
                             SelectionMode="DateInputSelectionMode.Range"/>
             </Addon>
             <Addon AddonType="AddonType.End">

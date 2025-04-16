@@ -1,3 +1,4 @@
+@using System.Globalization
 @using Core.Models.Reports
 
 @if(RouteReport is null) 
@@ -9,8 +10,8 @@
 <div class="route-report">
     <h2>Звіт для маршруту @RouteReport.Number</h2>
     <p>
-        <strong>З:</strong> @RouteReport.StartDate.ToString("yyyy MMMM dd")
-        <strong>До:</strong> @RouteReport.EndDate.ToString("yyyy MMMM dd")
+        <strong>З:</strong> @RouteReport.StartDate.ToString("yyyy MMMM dd", new CultureInfo("uk-UA"))
+        <strong>До:</strong> @RouteReport.EndDate.ToString("yyyy MMMM dd", new CultureInfo("uk-UA"))
     </p>
     <p><strong>Згенеровано:</strong> @RouteReport.GeneratedAt.ToString("yyyy-MM-dd HH:mm:ss")</p>
     <p><strong>Всього пасажирів:</strong> @RouteReport.TotalAmountOfPassenger</p>
@@ -26,11 +27,11 @@
     }
     @if (RouteReport.PerHour != null)
     {
-        <p><strong>Per Hour Report:</strong> @RouteReport.PerHour</p>
+        <PerHourReportDisplay PerHourReport="RouteReport.PerHour"/>
     }
 </div>
 
 @code {
     [Parameter]
-    public required RouteReport RouteReport { get; set; }
+    public required RouteReport? RouteReport { get; set; }
 }
