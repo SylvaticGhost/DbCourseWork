@@ -1,15 +1,24 @@
 using Core.Enums;
 using Core.Interfaces;
+using Utils.Attributes;
 
 namespace Core.Models;
 
 public record Route : IFormTableEntity, IDbEntity
 {
+    [UkrFormField("номер")]
+    [DbColumn("number")]
     public string Number { get; init; }
     
+    [UkrFormField("назва")]
+    [DbColumn("name")]
     public string Name { get; init; }
     
+    [DbColumn("operator")]
     public int Operator { get; init; }
+    
+    [UkrFormField("оператор")]
+    public Operators OperatorEnum => (Operators)Operator;
 
     public Route(string number, string name, short @operator)
     {
@@ -17,7 +26,8 @@ public record Route : IFormTableEntity, IDbEntity
         Name = name;
         Operator = @operator;
     }
-
+    
+    [UkrFormField("вид транспорту")]
     public VehicleType Vehicle => VehicleMapper.GetFromAbbreviation(GetPrefix(Number));
 
     public static string GetPrefix(string number) => new (number.TakeWhile(char.IsLetter).ToArray());
@@ -28,6 +38,6 @@ public record Route : IFormTableEntity, IDbEntity
     public string? UrlOnPage => $"/RouteInfo/{Number}";
 
     public static readonly string[] FormFields = ["Номер", "Назва", "Оператор", "Вид транспорту"];
-    public static readonly string[] Columns = ["number", "name", "operator", "vehicle"];
+    public static readonly string[] Columns = ["number", "name", "operator"];
     public string AsSqlRow() => $"('{Number}', '{Name}', {Operator})";
 }

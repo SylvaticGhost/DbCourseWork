@@ -1,3 +1,5 @@
+using Utils.Attributes;
+
 namespace Core.Enums;
 
 public enum Operators
@@ -14,10 +16,6 @@ public static class OperatorsExtensions
       {Operators.KpKyivPassTrans, "КП \"Київпастранс\""},
    };
 
+   [DisplayNameConversion]
    public static string ToOfficialName(this Operators op) => OperatorName.GetValueOrDefault(op, "Невідомий перевізник");
-}
-
-public static class OperatorsMapper
-{
-   public static readonly Operators[] AllValues = Enum.GetValues<Operators>();
 }

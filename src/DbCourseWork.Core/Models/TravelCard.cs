@@ -1,16 +1,25 @@
 using Core.Interfaces;
 using Core.Models.Systems;
+using Utils.Attributes;
 
 namespace Core.Models;
 
 public record TravelCard : IFormTableEntity, IDbEntity
 {
+    [UkrFormField("Код")]
+    [DbColumn("code")]
     public long Code { get; private set; }
 
+    [UkrFormField("Власник")]
+    [DbColumn("owner")]
     public int OwnerId { get; private set; }
 
+    [UkrFormField("Дата випуску")]
+    [DbColumn("release_date")]
     public DateOnly ReleaseDate { get; private set; }
-
+    
+    [UkrFormField("Дата кінця")]
+    [DbColumn("expiration_date")]
     public DateOnly ExpirationDate { get; private set; }
 
     public string CodeAsString => Code.ToString("D10");

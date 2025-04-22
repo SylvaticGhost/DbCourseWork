@@ -1,0 +1,33 @@
+@using System.Reflection
+@using Core.Enums
+@using global::Utils.Attributes
+<Select SelectedValue="@SelectedValue" style="width: 50%">
+    @foreach(var val in System.Enum.GetValues(Enum))
+    {
+        <SelectItem Value="@val">@GetToStringFunc(Enum)(val)</SelectItem>
+    }
+</Select>
+
+@code {
+    [Parameter]
+    public required object SelectedValue { get; set; }
+
+    [Parameter]
+    public EventCallback<object> SelectedValueChanged { get; set; }
+    
+    [Parameter]
+    public required Type Enum { get; set; }
+
+    private Func<object, string?> GetToStringFunc(Type enumType)
+    {
+        var method = typeof(Operators).Assembly.GetTypes()
+            .SelectMany(t => t.GetMethods(BindingFlags.Public | BindingFlags.Static))
+            .FirstOrDefault(m => m.GetCustomAttribute<DisplayNameConversionAttribute>() != null  &&
+                                 m.GetParameters().Length == 1 &&
+                                 m.GetParameters()[0].ParameterType == enumType);
+        if (method != null)
+            return value => (string)(method!.Invoke(null, [value]) ?? value.ToString());
+        
+        return value => value.ToString();
+    }
+}

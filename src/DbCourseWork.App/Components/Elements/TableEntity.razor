@@ -1,5 +1,9 @@
+@using System.Collections
+@using System.Reflection
 @using Ardalis.Result
 @using Core.Models.Systems
+@using global::Utils
+@using global::Utils.Attributes
 @using WebUI.Utils
 @typeparam TEntity where TEntity : Core.Interfaces.IFormTableEntity
 
@@ -44,7 +48,7 @@
             </div>
         </div>
     </header>
-    <main style="display: flex; gap: 1rem;">
+    <main style="gap: 1rem;" class="flex flex-col">
         <Table Striped Hoverable>
             <TableHeader>
                 <TableRow>
@@ -73,21 +77,58 @@
                                     @values[0]
                                 }
                             </TableRowHeader>
-                            @for(int i = 1; i < values.Length; i++)
+                            @for (int i = 1; i < values.Length; i++)
                             {
                                 int i1 = i;
                                 <TableRowCell>@values[i1]</TableRowCell>
+                            }
+                            @if (EditAndDelete)
+                            {
+                                <TableRowCell>
+                                    <Button>
+                                        <Icon Name="IconName.Pen"/>
+                                    </Button>
+                                </TableRowCell>
+                                <TableRowCell>
+                                    <Button>
+                                        <Icon Name="IconName.Delete"/>
+                                    </Button>
+                                </TableRowCell>
                             }
                         </TableRow>
                     }
                 }
             </TableBody>
         </Table>
+        @* <div class="mt-2"> *@
+        @*     <h3>Додати запис</h3> *@
+        @*     <div class="flex flex-col mb-4"> *@
+        @*         @foreach (var property in _properties) *@
+        @*         { *@
+        @*             var type = property.PropertyType; *@
+        @*             <div> *@
+        @*                 <label *@
+        @*                     class="mr-2">@(property.GetValueFromAttribute<UkrFormFieldAttribute, string>(a => a.Name))</label> *@
+        @*                 @if (type.IsEnum) *@
+        @*                 { *@
+        @*                     _insertFields[property.Name] = EnumExtensions.GetDefault(type);  *@
+        @*                     <EnumSelector Enum="@(type)" SelectedValue="_insertFields[property.Name]"/> *@
+        @*                 } *@
+        @*                 else *@
+        @*                 { *@
+        @*                     <input style="width: 50%" type="text" onchange="@( (ChangeEventArgs args) => _insertFields[property.Name] = args.Value )"/> *@
+        @*                 } *@
+        @*             </div> *@
+        @*         } *@
+        @*         <Button class="btn btn-primary mt-2" @onclick="Insert">Додати</Button> *@
+        @*     </div> *@
+        @* </div> *@
     </main>
     </body>
 </CascadingValue>
 
 @code {
+    private readonly Hashtable _insertFields = new();
 
     [Parameter]
     public string DisplayName { get; set; } = string.Empty;
@@ -96,11 +137,24 @@
     public required Func<SearchParameters, Task<Result<IEnumerable<TEntity>>>> Search { get; set; }
 
     [Parameter]
+    public Func<object, Task<Result<TEntity>>>? InsertEntity { get; set; }
+
+    [Parameter]
     public short[] PageSizes { get; set; } = [5, 10, 30];
 
-    private readonly string[] _formFields = LoadEntityColumns(typeof(TEntity));
+    [Parameter]
+    public bool EditAndDelete { get; set; } = true;
+
+    [Parameter]
+    public RenderFragment? InsertForm { get; set; }
+
+    private readonly string[] _formFields = PropertyMapper.GetFormFields(typeof(TEntity));
+
+    private readonly PropertyInfo[] _properties = PropertyMapper.GetByAttribute<UkrFormFieldAttribute>(typeof(TEntity));
 
     private readonly PageError _pageError = new();
+
+    private readonly IReadOnlyDictionary<string, string> _ukrToEngDictionary = PropertyMapper.MapUkrToPropertyName(typeof(TEntity));
 
     private int _page = 1;
     private int _lastPage = 0;
@@ -120,7 +174,7 @@
             _entities = result.Value;
         else
             _pageError.SetOnFailure(result);
-        
+
         if (_pageSize != 0 && result.Value.Count() < _pageSize)
             _lastPage = _page;
     }
@@ -128,7 +182,7 @@
     private Task PrevPage() => ChangePage(p => p - 1, _page == 1);
 
     private Task NextPage() => ChangePage(p => p + 1, _lastPage != 0 && _page + 1 > _lastPage);
-    
+
     private Task ToFirstPage() => ChangePage(_ => 1, _page == 1);
 
     private async Task ChangePage(Func<int, int> changeFunc, bool forceReturn = false)
@@ -148,15 +202,12 @@
         await FetchData();
     }
 
-    private static string[] LoadEntityColumns(Type type)
+    private async Task Insert()
     {
-        var field = type.GetField("FormFields");
-        if (field == null)
-            throw new InvalidOperationException($"Type {type.Name} does not have a FormFields method.");
-        
-        if (field.GetValue(null) is not string[] fields)
-            throw new InvalidOperationException($"Type {type.Name} does not have a FormFields method.");
-
-        return fields;
+        foreach (DictionaryEntry dictionaryEntry in _insertFields)
+        {
+            Console.WriteLine($"{dictionaryEntry.Key}, {dictionaryEntry.Value}");
+        }
     }
+
 }
