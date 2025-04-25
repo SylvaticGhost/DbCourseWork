@@ -1,4 +1,3 @@
-@using System.Collections
 @using System.Reflection
 @using Ardalis.Result
 @using Core.Models.Systems
@@ -39,7 +38,7 @@
 
             <div>
                 <label>Розмір сторінки</label>
-                <Select SelectedValue="@_pageSize" SelectedValueChanged="PageSizeChanged" TValue="short">
+                <Select SelectedValue="@_pageSize" SelectedValueChanged="PageSizeChanged" Style="width: 100px" Size="Size.Medium" Class="mb-2" TValue="short">
                     @foreach (byte v in PageSizes)
                     {
                         <SelectItem Value="@v">@v</SelectItem>
@@ -82,54 +81,16 @@
                                 int i1 = i;
                                 <TableRowCell>@values[i1]</TableRowCell>
                             }
-                            @if (EditAndDelete)
-                            {
-                                <TableRowCell>
-                                    <Button>
-                                        <Icon Name="IconName.Pen"/>
-                                    </Button>
-                                </TableRowCell>
-                                <TableRowCell>
-                                    <Button>
-                                        <Icon Name="IconName.Delete"/>
-                                    </Button>
-                                </TableRowCell>
-                            }
                         </TableRow>
                     }
                 }
             </TableBody>
         </Table>
-        @* <div class="mt-2"> *@
-        @*     <h3>Додати запис</h3> *@
-        @*     <div class="flex flex-col mb-4"> *@
-        @*         @foreach (var property in _properties) *@
-        @*         { *@
-        @*             var type = property.PropertyType; *@
-        @*             <div> *@
-        @*                 <label *@
-        @*                     class="mr-2">@(property.GetValueFromAttribute<UkrFormFieldAttribute, string>(a => a.Name))</label> *@
-        @*                 @if (type.IsEnum) *@
-        @*                 { *@
-        @*                     _insertFields[property.Name] = EnumExtensions.GetDefault(type);  *@
-        @*                     <EnumSelector Enum="@(type)" SelectedValue="_insertFields[property.Name]"/> *@
-        @*                 } *@
-        @*                 else *@
-        @*                 { *@
-        @*                     <input style="width: 50%" type="text" onchange="@( (ChangeEventArgs args) => _insertFields[property.Name] = args.Value )"/> *@
-        @*                 } *@
-        @*             </div> *@
-        @*         } *@
-        @*         <Button class="btn btn-primary mt-2" @onclick="Insert">Додати</Button> *@
-        @*     </div> *@
-        @* </div> *@
     </main>
     </body>
 </CascadingValue>
 
 @code {
-    private readonly Hashtable _insertFields = new();
-
     [Parameter]
     public string DisplayName { get; set; } = string.Empty;
 
@@ -147,6 +108,10 @@
 
     [Parameter]
     public RenderFragment? InsertForm { get; set; }
+    
+    [Parameter]
+    public EventCallback OnDataChanged { get; set; }
+
 
     private readonly string[] _formFields = PropertyMapper.GetFormFields(typeof(TEntity));
 
@@ -165,6 +130,13 @@
     private bool IsFirstPage() => _page == 1;
 
     private bool Loaded() => _entities != null;
+    
+    public async Task ReloadData()
+    {
+        _page = 1;
+        await FetchData();
+        StateHasChanged();
+    }
 
     private async Task FetchData()
     {
@@ -200,14 +172,6 @@
         _pageSize = newSize;
         _page = 1;
         await FetchData();
-    }
-
-    private async Task Insert()
-    {
-        foreach (DictionaryEntry dictionaryEntry in _insertFields)
-        {
-            Console.WriteLine($"{dictionaryEntry.Key}, {dictionaryEntry.Value}");
-        }
     }
 
 }

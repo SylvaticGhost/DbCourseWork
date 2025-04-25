@@ -8,7 +8,7 @@ public interface IRouteService : ISearchableService<Route>
 {
     public Task<Route[]> GetAllRoutes();
 
-    public Task<Result<Route>> Create(RouteCreateDto routeCreateDto);
+    public Task<Result<Route>> Create(RouteCreateDto createDto);
 
     public Task<Result<Route>> Find(string number);
 }

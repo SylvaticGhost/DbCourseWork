@@ -18,4 +18,6 @@ public static class OperatorsExtensions
 
    [DisplayNameConversion]
    public static string ToOfficialName(this Operators op) => OperatorName.GetValueOrDefault(op, "Невідомий перевізник");
+   
+   public static Operators ToOperator(string op) => Enum.Parse<Operators>(op);
 }

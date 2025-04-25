@@ -6,4 +6,6 @@ namespace Services;
 public interface IVehicleService : ISearchableService<Vehicle>
 {
     public Task<Result<IEnumerable<Vehicle>>> GetAllVehicles();
+
+    public Task<Result<Vehicle>> Create(Vehicle vehicle);
 }

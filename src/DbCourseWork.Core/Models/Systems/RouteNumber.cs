@@ -56,4 +56,6 @@ public struct RouteNumber
 
         return null;
     }
+    
+    public const string RegexPattern = @"^[\u0410-\u044F]{1,2}\d{0,4}$";
 }

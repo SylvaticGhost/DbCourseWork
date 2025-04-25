@@ -29,4 +29,12 @@ public static class VehicleMapper
     public static readonly VehicleType[] AllValues = Enum.GetValues<VehicleType>();
     
     public static bool IsPrefixValid(string prefix) => VehicleAbbreviation.ContainsKey(prefix.ToUpper());
+
+    public static VehicleType ToVehicleType(string type)
+    {
+        if (Enum.TryParse<VehicleType>(type, ignoreCase: true, out var vehicleType))
+            return vehicleType;
+
+        throw new ArgumentException($"Unknown vehicle type: {type}");
+    }
 }

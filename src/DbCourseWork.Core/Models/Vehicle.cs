@@ -8,6 +8,8 @@ namespace Core.Models;
 
 public record Vehicle : IFormTableEntity, IDbEntity, IPrototype<Vehicle>
 {
+    public const int MaxNumber = 9999;
+    
     [DbPrimaryKey]
     [UkrFormField("номер")]
     [DbColumn("number")]
@@ -39,7 +41,7 @@ public record Vehicle : IFormTableEntity, IDbEntity, IPrototype<Vehicle>
     public static readonly string[] FormFields = FieldNamesUkrToEngDictionary.Keys.ToArray();
     public static readonly string[] FormFieldEng = ["number", "type"];
     
-    public string AsSqlRow() => $"({Number}, {(int)Type})";
+    public string AsSqlRow() => $"{Number}, {(int)Type}";
 
     public static readonly string[] Columns = ["number", "type"];
 
