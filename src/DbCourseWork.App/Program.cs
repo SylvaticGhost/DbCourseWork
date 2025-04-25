@@ -5,7 +5,7 @@ using Services;
 using WebUI;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Configuration.AddJsonFile("secrets.json", optional: false, reloadOnChange: true);
+builder.Configuration.AddJsonFile("secrets.json", optional: true, reloadOnChange: true);
 
 // Add services to the container.
 builder.Services.AddRazorPages();

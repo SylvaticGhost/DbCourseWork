@@ -22,4 +22,10 @@
 **/secrets.dev.yaml
 **/values.dev.yaml
 LICENSE
+**/Excel
+**/Sql
+**.md
+**.editorconfig
+**.yml
 README.md
+**secrets.json

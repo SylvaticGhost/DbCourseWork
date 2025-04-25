@@ -6,7 +6,6 @@
 @using Services
 @using WebUI.Components.Elements
 @using Field = Blazorise.Field
-@using WebUI.Components
 @using WebUI.Utils
 @inject IRouteService RouteService
 
@@ -65,8 +64,7 @@
     private string _numberPrefix = string.Empty;
     private short _numberSuffix = 1;
 
-// Add this computed property to combine the prefix and suffix
-    private string _number => $"{_numberPrefix}{_numberSuffix}";
+    private string Number => $"{_numberPrefix}{_numberSuffix}";
 
     private string _name;
     
@@ -76,7 +74,7 @@
     private async Task CreateRoute()
     {
         Console.WriteLine(_numberPrefix);
-        var dto = new RouteCreateDto(_number, _name, _operator);
+        var dto = new RouteCreateDto(Number, _name, _operator);
         Console.WriteLine($"Creteing route {dto.Number}, {dto.Name}, {dto.Operator}");
         var result = await RouteService.Create(dto);
 

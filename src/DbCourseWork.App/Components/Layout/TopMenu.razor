@@ -5,7 +5,7 @@
         <BarItem>
             <BarLink To="">
                 <BarIcon Margin="Margin.Is2.FromEnd" IconName="IconName.Dashboard"/>
-                WebUI
+                Головна
             </BarLink>
         </BarItem>
     </BarBrand>
@@ -13,14 +13,11 @@
     <BarMenu>
         <BarStart>
             <BarItem>
-                <BarLink To="/">Home</BarLink>
-            </BarItem>
-            <BarItem>
-                <BarLink To="https://blazorise.com/docs/">Documentation</BarLink>
+                <BarLink To="https://blazorise.com/docs/">Довідка</BarLink>
             </BarItem>
             <BarItem>
                 <BarDropdown>
-                    <BarDropdownToggle>More</BarDropdownToggle>
+                    <BarDropdownToggle>Більше</BarDropdownToggle>
                     <BarDropdownMenu>
                         <BarDropdownItem To="https://blazorise.com/docs/start/">
                             Quick-Start Guide
@@ -34,7 +31,7 @@
             </BarItem>
             <BarItem>
                 <BarDropdown>
-                    <BarDropdownToggle>Layout</BarDropdownToggle>
+                    <BarDropdownToggle>Відображення</BarDropdownToggle>
                     <BarDropdownMenu>
                         <BarDropdownItem Clicked="@(() => OnLayoutTypeChecked("fixed-header"))">
                             @if (LayoutType == "fixed-header")
