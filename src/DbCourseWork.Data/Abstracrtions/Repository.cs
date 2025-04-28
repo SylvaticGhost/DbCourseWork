@@ -2,6 +2,7 @@ using System.Reflection;
 using System.Text;
 using Core.Interfaces;
 using Data.Context;
+using Data.Utils;
 using Utils;
 using Utils.Attributes;
 
@@ -32,20 +33,17 @@ public abstract class Repository<TEntity>(DataContext dataContext)
     public Task Delete(TEntity entity)
     {
         PropertyInfo[] keyProperties = PropertyMapper.GetByAttribute<DbPrimaryKeyAttribute>(typeof(TEntity));
-        
         if (keyProperties.Length == 0)
-            throw new InvalidOperationException($"Type {typeof(TEntity).Name} does not have a primary key.");
-        
+        {
+            keyProperties = PropertyMapper.GetByAttribute<DbColumnAttribute>(typeof(TEntity));
+            if (keyProperties.Length == 0)
+                throw new InvalidOperationException($"Type {typeof(TEntity).Name} does not have a primary key.");
+        }
         object?[] keyValues = keyProperties.Select(prop => prop.GetValue(entity)).ToArray();
         
-        var sql = $"DELETE FROM {CollectionName} WHERE {string.Join(" AND ", keyProperties.Select((prop, i) => $"{prop.Name} = {keyValues[i]}"))};";
+        var sql = $"DELETE FROM {CollectionName} WHERE {string.Join(" AND ", keyProperties.Select((prop, i) => $"{prop.Name} = {SqlTextHelper.FormatValue(keyValues[i])}"))};";
         return _dataContext.ExecuteSql(sql);
     }
-
-    // public Task Update(TEntity entity)
-    // {
-    //     
-    // }
 
     private StringBuilder InsertBuilder =>
         new StringBuilder().AppendLine($"INSERT INTO {CollectionName} ({string.Join(", ", Columns)}) VALUES ");

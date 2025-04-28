@@ -2,7 +2,7 @@ using Dapper;
 
 namespace Data.Utils;
 
-public class DynamicParametersExtensions
+internal static class DynamicParametersExtensions
 {
     public static DynamicParameters WithSingleParameter(string name, object value) 
     {

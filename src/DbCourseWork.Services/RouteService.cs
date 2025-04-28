@@ -2,6 +2,7 @@ using Ardalis.Result;
 using Core.Models.DTOs;
 using Core.Validations;
 using Data.Repositories;
+using Services.Abstractions;
 using Utils;
 using ResultExtensions = Utils.ResultExtensions;
 using Route = Core.Models.Route;
@@ -9,7 +10,7 @@ using Route = Core.Models.Route;
 namespace Services;
 
 public class RouteService(IRouteRepository repository)
-    : SearchableService<Route>(repository), IRouteService
+    : MutableService<Route>(repository), IRouteService
 {
     public Task<Route[]> GetAllRoutes() => repository.GetAllRoutes();
 

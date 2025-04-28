@@ -42,6 +42,21 @@ public static class ResultExtensions
             return Result<T>.Error(ex.Message);
         }
     }
+
+    public static async Task<Result> InErrorHandler(Task task, bool throwInDebug = false)
+    {
+        try 
+        {
+            await task;
+            return Result.Success();
+        }
+        catch (Exception ex)
+        {
+            if (throwInDebug)
+                throw;
+            return Result.Error(ex.Message);
+        }
+    }
     
     public static string JoinErrorMessage<T>(this Result<T> result) => string.Join(',', result.Errors);
 

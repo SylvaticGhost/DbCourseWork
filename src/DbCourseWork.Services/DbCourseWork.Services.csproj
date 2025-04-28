@@ -23,9 +23,6 @@
       <Compile Update="CardService.cs">
         <DependentUpon>ICardService.cs</DependentUpon>
       </Compile>
-      <Compile Update="SearchableService.cs">
-        <DependentUpon>ISearchableService.cs</DependentUpon>
-      </Compile>
       <Compile Update="CardOwnerService.cs">
         <DependentUpon>ICardOwnerService.cs</DependentUpon>
       </Compile>

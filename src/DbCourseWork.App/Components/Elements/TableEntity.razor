@@ -1,8 +1,7 @@
-@using System.Reflection
+@using Ardalis.GuardClauses
 @using Ardalis.Result
 @using Core.Models.Systems
 @using global::Utils
-@using global::Utils.Attributes
 @using WebUI.Utils
 @typeparam TEntity where TEntity : Core.Interfaces.IFormTableEntity
 
@@ -62,6 +61,7 @@
             <TableBody>
                 @if (Loaded())
                 {
+                    bool deleteEntity = EnableEntityDelete();
                     foreach (var entity in _entities!)
                     {
                         string[] values = entity.RowDisplayValues;
@@ -81,6 +81,12 @@
                                 int i1 = i;
                                 <TableRowCell>@values[i1]</TableRowCell>
                             }
+                            @if (deleteEntity)
+                            {
+                                <TableRowCell>
+                                    <button @onclick="() => Delete(entity)"><Icon Name="IconName.Delete"/></button>
+                                </TableRowCell>
+                            }
                         </TableRow>
                     }
                 }
@@ -99,6 +105,9 @@
 
     [Parameter]
     public Func<object, Task<Result<TEntity>>>? InsertEntity { get; set; }
+    
+    [Parameter]
+    public Func<TEntity, Task<Result>>? DeleteEntity { get; set; }
 
     [Parameter]
     public short[] PageSizes { get; set; } = [5, 10, 30];
@@ -115,11 +124,7 @@
 
     private readonly string[] _formFields = PropertyMapper.GetFormFields(typeof(TEntity));
 
-    private readonly PropertyInfo[] _properties = PropertyMapper.GetByAttribute<UkrFormFieldAttribute>(typeof(TEntity));
-
     private readonly PageError _pageError = new();
-
-    private readonly IReadOnlyDictionary<string, string> _ukrToEngDictionary = PropertyMapper.MapUkrToPropertyName(typeof(TEntity));
 
     private int _page = 1;
     private int _lastPage = 0;
@@ -174,4 +179,15 @@
         await FetchData();
     }
 
+    private async Task Delete(TEntity entity)
+    {
+        Guard.Against.Null(DeleteEntity);
+        var result = await DeleteEntity(entity);
+        if (result.IsSuccess)
+            await FetchData();
+        else
+            _pageError.SetOnFailure(result);
+    }
+    
+    private bool EnableEntityDelete() => DeleteEntity != null;
 }

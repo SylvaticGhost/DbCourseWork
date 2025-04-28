@@ -4,7 +4,7 @@ using Core.Models.Systems;
 using Data.Abstracrtions;
 using ResultExtensions = Utils.ResultExtensions;
 
-namespace Services;
+namespace Services.Abstractions;
 
 public class SearchableService<TEntity>(IReadOnlyRepository<TEntity> repository)
     : ISearchableService<TEntity> where TEntity : IReadOnlyDbEntity, IFormTableEntity

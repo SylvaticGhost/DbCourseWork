@@ -1,9 +1,10 @@
 using Ardalis.Result;
 using Core.Models;
+using Services.Abstractions;
 
 namespace Services;
 
-public interface IVehicleService : ISearchableService<Vehicle>
+public interface IVehicleService : IMutableService<Vehicle>
 {
     public Task<Result<IEnumerable<Vehicle>>> GetAllVehicles();
 
