@@ -22,13 +22,13 @@
     {
         Guard.Against.Null(PerDayReport);
         _passengerMetricParam= new MetricBuilder<AllDailyUsage, PerDayReport>(PerDayReport)
-            .AddTitle("Пасажиропотік по дням")
+            .AddTitle("Пасажиропотік по дняx")
             .AddDimension(x => x.PassengersByTravelCard, "Проїзні картки")
             .AddDimension(x => x.PassengersByBankCard, "Банківські картки")
             .Build();
         
         _uniqPassengerMetricParam = new MetricBuilder<AllDailyUsage, PerDayReport>(PerDayReport)
-            .AddTitle("Кількість унікальних пасажирів по дням")
+            .AddTitle("Кількість унікальних пасажирів по дняx")
             .AddDimension(x => x.UniquePassengersByTravelCard, "Проїзні картки")
             .AddDimension(x => x.UniquePassengersByBankCard, "Банківські картки")
             .Build();

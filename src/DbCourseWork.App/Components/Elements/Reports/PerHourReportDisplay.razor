@@ -16,7 +16,7 @@
         Guard.Against.Null(PerHourReport);
         
         _passengerMetricParam = new MetricBuilder<AllHourlyUsage, PerHourReport>(PerHourReport)
-            .AddTitle("Пасажиропотік по годинам")
+            .AddTitle("Пасажиропотік по годинаx")
             .AddDimension(x => x.PassengersByTravelCard, "Проїзні картки")
             .AddDimension(x => x.PassengersByBankCard, "Банківські картки")
             .Build();
