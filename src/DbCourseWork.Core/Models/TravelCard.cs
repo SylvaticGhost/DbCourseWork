@@ -1,6 +1,7 @@
 using Core.Interfaces;
 using Core.Models.Systems;
 using Utils.Attributes;
+using Utils.Extensions;
 
 namespace Core.Models;
 
@@ -32,15 +33,14 @@ public record TravelCard : IFormTableEntity, IDbEntity
         ExpirationDate = expirationDate;
         RowDisplayValues =
         [
-            CodeAsString, OwnerId.ToString(), ReleaseDate.ToString("yyyy MMMM dd"),
-            ExpirationDate.ToString("yyyy MMMM dd")
+            CodeAsString, OwnerId.ToString(), ReleaseDate.ToUkr(),
+            ExpirationDate.ToUkr()
         ];
     }
 
     public TravelCard(decimal code, int owner, DateTime release_date, DateTime expiration_date) : this((long)code,
         owner, DateOnly.FromDateTime(release_date), DateOnly.FromDateTime(expiration_date)) { }
 
-    public static readonly string[] FormFields = ["Код", "Власник", "Дата випуску", "Дата кінця"];
     public string[] RowDisplayValues { get; }
     public string? UrlOnPage => null;
     public string AsSqlRow() => $"{Code}, {OwnerId}, '{ReleaseDate}', '{ExpirationDate}'";

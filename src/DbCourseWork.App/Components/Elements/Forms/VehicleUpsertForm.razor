@@ -1,0 +1,26 @@
+@using Core.Enums
+@using Core.Models.DTOs
+@inherits UpsertFormBase<Core.Models.Vehicle, Core.Models.Vehicle, VehicleUpsertParam>
+<Field ColumnSize="ColumnSize.Is6.OnDesktop.Is12.OnMobile">
+    <FieldLabel>Номер</FieldLabel>
+    <FieldBody>
+        <NumericEdit @bind-Value="Param.Number" Size="Size.Small" Max="9999" Style="width: 80px;"/>
+    </FieldBody>
+</Field>
+<Field ColumnSize="ColumnSize.Is6.OnDesktop.Is12.OnMobile">
+    <FieldLabel>Вид</FieldLabel>
+    <FieldBody>
+        <EnumSelector SelectedValue="Param.Type" 
+                      SelectedValueChanged="o => Param.Type = VehicleMapper.ToVehicleType((string)o)" 
+                      Enum="typeof(VehicleType)"/>
+    </FieldBody>
+</Field>
+@if (Create is not null)
+{
+    <Button class="btn btn-primary" @onclick="CreateClick">Додати</Button>
+}
+@if (Update is not null)
+{
+    <Button class="btn btn-primary" @onclick="UpdateClick">Зберегти</Button>
+}
+

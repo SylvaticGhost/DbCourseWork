@@ -1,5 +1,6 @@
 using Core.Enums;
 using Utils;
+using Utils.Extensions;
 
 namespace Core.Models.Reports;
 

@@ -33,8 +33,6 @@ public record Ride : IDbEntity, IFormTableEntity
 
     public static readonly string[] Columns = ["id", "vehicle", "route"];
 
-    public static readonly string[] FormFields = ["id", "номер ТЗ", "маршрут"];
-
     public string AsSqlRow() => $"'{Id}', {Vehicle}, '{LocalizationHelper.ToCyrillicLetters(Route)}'";
     
     public string[] RowDisplayValues => [Id.ToString(), Vehicle.ToString(), Route];

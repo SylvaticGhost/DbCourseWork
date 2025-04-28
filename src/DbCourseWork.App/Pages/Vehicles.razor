@@ -1,71 +1,52 @@
 @page "/Vehicles"
-@using Core.Enums
 @using Core.Models
-@using Core.Models.Systems
+@using Core.Models.DTOs
 @using Services
 @using WebUI.Components.Elements
-@using WebUI.Utils
-@using Field = Blazorise.Field
-@using WebUI.Components
+@using WebUI.Components.Elements.Forms
 @inject IVehicleService VehicleService
+@inherits MutableListPage<Vehicle, Vehicle, VehicleUpsertParam>
 
 <body>
 <TableEntity
+    @ref="TableEntity"
     TEntity="Vehicle"
     DisplayName="Транспортні засоби"
     Search="VehicleService.Search"
+    DeleteEntity="VehicleService.Delete"
+    UpdateEntity="InvokeUpdateModel" 
 />
 <div class="flex flex-col">
-    <Field ColumnSize="ColumnSize.Is6.OnDesktop.Is12.OnMobile">
-        <FieldLabel>Номер</FieldLabel>
-        <FieldBody>
-            <NumericEdit @bind-Value="_number" Size="Size.Small" Max="9999" Style="width: 80px;"/>
-        </FieldBody>
-    </Field>
-    <Field ColumnSize="ColumnSize.Is6.OnDesktop.Is12.OnMobile">
-        <FieldLabel>Вид</FieldLabel>
-        <FieldBody>
-            <EnumSelector SelectedValue="_vehicleType" 
-                          SelectedValueChanged="o => _vehicleType = VehicleMapper.ToVehicleType((string)o)" 
-                          Enum="typeof(VehicleType)"/>
-        </FieldBody>
-    </Field>
-    <Button class="btn btn-primary" @onclick="AddRoute">Додати</Button>
+    <VehicleUpsertForm
+        Param="UpsParam"
+        Create="AddRoute"
+    />
 </div>
+<Modal @ref="ModalRef">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle>Модифікувати маршрут</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            <VehicleUpsertForm
+                Param="UpsParam"
+                Source="SelectedEntity"
+                Update="UpdateVehicle"
+            />
+        </ModalBody>
+    </ModalContent>
+</Modal>
 
 </body>
 
 @code {
-    private TableEntity<Vehicle>? _tableEntity;
+    protected override VehicleUpsertParam UpsParam { get; set; } = VehicleUpsertParam.Empty();
     
-    private PageError _pageError = new();
-
-    private int _number = 1;
-
-    private VehicleType _vehicleType = VehicleType.Автобус;
-
-    private async Task AddRoute()
-    {
-        Console.WriteLine($"Adding vehicle with number: {_number} and type: {_vehicleType}");
-        var result = await VehicleService.Create(new Vehicle(_number, _vehicleType));
-        Console.WriteLine($"Result: {result.IsSuccess}");
-        if (!result.IsSuccess)
-        {
-            _pageError.SetOnFailure(result);
-            return;
-        }
-        
-        ClearForm();
-        
-        if(_tableEntity is not null)
-            await _tableEntity.ReloadData();
-    }
-
-    private void ClearForm()
-    {
-        _number = 1;
-        _vehicleType = VehicleType.Автобус;
-    }
-
+    private Task AddRoute(VehicleUpsertParam param) =>
+        ContentChange(r => VehicleService.Create(r), param);
+    
+    private Task UpdateVehicle(Vehicle vehicle, VehicleUpsertParam param) =>
+        ContentChange(r => VehicleService.Update(vehicle, r), param);
 }
     

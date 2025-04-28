@@ -45,5 +45,4 @@ public class RouteRepository(DataContext dataContext) : Repository<Route>(dataCo
 
     protected override SortingField DefaultSortingField => new("number");
     protected override string CollectionName => "routes";
-    protected override string[] Columns => Route.Columns;
 }

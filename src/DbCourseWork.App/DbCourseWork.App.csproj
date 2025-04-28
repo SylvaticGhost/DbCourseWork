@@ -48,7 +48,6 @@
       <AdditionalFiles Include="Components\Elements\RouteInfoView.razor" />
       <AdditionalFiles Include="Components\Elements\RouteNumberCode.razor" />
       <AdditionalFiles Include="Components\Elements\TableEntity.razor" />
-      <AdditionalFiles Include="Components\Elements\VehicleTableGroup.razor" />
     </ItemGroup>
 
     <ItemGroup>

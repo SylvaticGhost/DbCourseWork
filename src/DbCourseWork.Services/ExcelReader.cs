@@ -3,6 +3,7 @@ using ClosedXML.Excel;
 using Core.Models;
 using Core.Models.Systems;
 using Utils;
+using Utils.Extensions;
 
 namespace Services;
 

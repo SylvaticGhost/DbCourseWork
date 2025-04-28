@@ -11,6 +11,7 @@ public static class Validator
         var validator = new TValidator();
         var result = validator.Validate(entity);
         string errorMessage = string.Join(',', result.Errors.Select(e => e.ErrorMessage));
+        Console.WriteLine($"error at validation: {errorMessage}");
         if (result.IsValid)
             return Result.Success();
         

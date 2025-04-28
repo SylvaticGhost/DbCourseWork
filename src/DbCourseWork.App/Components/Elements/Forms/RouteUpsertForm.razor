@@ -1,0 +1,47 @@
+@using Core.Enums
+@using Core.Models.DTOs
+@using Route = Core.Models.Route
+@inherits UpsertFormBase<Route, RouteCreateDto, RouteUpsertParam>
+<Field ColumnSize="ColumnSize">
+    <FieldLabel>Номер</FieldLabel>
+    <FieldBody>
+        <div class="d-flex">
+            <TextEdit
+                @bind-Text="@Param.NumberPrefix"
+                id="numberPrefix"
+                MaxLength="2"
+                Size="Size.Small"
+                Style="width: 60px; margin-right: 5px;"
+            >
+            </TextEdit>
+            <NumericEdit TValue="short"
+                         @bind-Value="Param.NumberSuffix"
+                         id="numberSuffix"
+                         MaxLength="4"
+                         Size="Size.Small"
+                         Max="9999"
+            />
+        </div>
+    </FieldBody>
+</Field>
+<Field ColumnSize="ColumnSize">
+    <FieldLabel>Назва</FieldLabel>
+    <FieldBody>
+        <TextEdit @bind-Text="@Param.Name" id="name" Size="Size.Small"></TextEdit>
+    </FieldBody>
+</Field>
+<Field ColumnSize="ColumnSize">
+    <FieldLabel>Оператор</FieldLabel>
+    <FieldBody>
+        <EnumSelector Enum="typeof(Operators)" SelectedValue="Param.Operator" SelectedValueChanged="o => Param.Operator = OperatorsExtensions.ToOperator((string)o)"></EnumSelector>
+    </FieldBody>
+</Field>
+@if (Create is not null)
+{
+    <Button class="btn btn-primary" @onclick="CreateClick">Додати</Button>    
+}
+@if (Update is not null)
+{
+    <Button class="btn btn-primary" @onclick="UpdateClick">Зберегти</Button>
+}
+

@@ -13,7 +13,6 @@ public class CardOperationRepository(DataContext dataContext)
 
     protected override SortingField DefaultSortingField { get; } = new("card");
     protected override string CollectionName => "card_operation";
-    protected override string[] Columns => CardOperation.Columns;
 
     public Task<IEnumerable<CardOperation>> GetForCard(long card)
     {

@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Utils;
+namespace Utils.Extensions;
 
 public static class SbExtension
 {

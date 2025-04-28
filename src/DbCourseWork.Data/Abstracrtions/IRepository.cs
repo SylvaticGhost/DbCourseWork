@@ -7,4 +7,6 @@ public interface IRepository<TEntity> : IReadOnlyRepository<TEntity> where TEnti
     public Task Insert(TEntity entity);
 
     public Task Delete(TEntity entity);
+
+    public Task Update(TEntity oldEntity, TEntity newEntity);
 }

@@ -17,5 +17,4 @@ public class VehicleRepository(DataContext dataContext) : Repository<Vehicle>(da
 
     protected override SortingField DefaultSortingField => new("number");
     protected override string CollectionName => "vehicles";
-    protected override string[] Columns => Vehicle.Columns;
 }

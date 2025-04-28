@@ -22,5 +22,4 @@ public class CardOwnerRepository(DataContext dataContext) : Repository<CardOwner
 
     protected override SortingField DefaultSortingField => new("id");
     protected override string CollectionName => "cards_owners";
-    protected override string[] Columns => CardOwner.Columns;
 }

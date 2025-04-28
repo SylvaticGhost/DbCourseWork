@@ -7,7 +7,7 @@ using Utils.Attributes;
 
 namespace Core.Models;
 
-public record Route : IFormTableEntity, IDbEntity
+public record Route : IMutableFormEntity<RouteCreateDto, RouteUpsertParam>, IDbEntity
 {
     [UkrFormField("номер")]
     [DbColumn("number")]
@@ -47,7 +47,12 @@ public record Route : IFormTableEntity, IDbEntity
     public string[] RowDisplayValues => [Number, Name, ((Operators)Operator).ToOfficialName(), Vehicle.ToString()];
     public string? UrlOnPage => $"/RouteInfo/{Number}";
 
-    public static readonly string[] FormFields = ["Номер", "Назва", "Оператор", "Вид транспорту"];
+    public RouteUpsertParam ToUpsertParam()
+    {
+        var number = new RouteNumber(Number);
+        return new RouteUpsertParam(number.Prefix, number.Suffix, Name, OperatorEnum);
+    }
+
     public static readonly string[] Columns = ["number", "name", "operator"];
-    public string AsSqlRow() => $"('{Number}', '{Name}', {Operator})";
+    public string AsSqlRow() => $"'{Number}', '{Name}', {Operator}";
 }

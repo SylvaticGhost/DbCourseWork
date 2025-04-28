@@ -1,5 +1,6 @@
 using Core.Interfaces;
 using Utils.Attributes;
+using Utils.Extensions;
 
 namespace Core.Models;
 
@@ -38,7 +39,7 @@ public record CardOwner : IDbEntity, IFormTableEntity
             firstName,
             lastName,
             middleName ?? "не вказано",
-            birthDate.ToString("dd.MM.yyyy")
+            birthDate.ToUkr()
         ];
     }
 
@@ -49,8 +50,6 @@ public record CardOwner : IDbEntity, IFormTableEntity
     public string AsSqlRow() => $"{Id}, '{FirstName}', '{LastName}', '{MiddleName}', '{BirthDate}'";
 
     public static readonly string[] Columns = ["id", "first_name", "last_name", "middle_name", "birth_date"];
-
-    public static readonly string[] FormFields = ["id", "імя", "прізвище", "по батькові", "дата народження"];
 
     public string[] RowDisplayValues { get; }
 }

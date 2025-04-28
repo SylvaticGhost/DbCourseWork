@@ -28,5 +28,4 @@ public class CardRepository(DataContext dataContext) : Repository<TravelCard>(da
 
     protected override SortingField DefaultSortingField { get; } = new("code");
     protected override string CollectionName => "travel_cards";
-    protected override string[] Columns => TravelCard.Columns;
 }

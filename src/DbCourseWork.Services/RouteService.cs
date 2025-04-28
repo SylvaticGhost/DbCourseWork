@@ -4,32 +4,24 @@ using Core.Validations;
 using Data.Repositories;
 using Services.Abstractions;
 using Utils;
-using ResultExtensions = Utils.ResultExtensions;
+using ResultExtensions = Utils.Extensions.ResultExtensions;
 using Route = Core.Models.Route;
 
 namespace Services;
 
 public class RouteService(IRouteRepository repository)
-    : MutableService<Route>(repository), IRouteService
+    : MutableService<Route, RouteCreateDto, RouteCreateValidator>(repository), IRouteService
 {
-    public Task<Route[]> GetAllRoutes() => repository.GetAllRoutes();
-
     public Task<Result<Route>> Find(string number) =>
         ResultExtensions.InErrorHandler(() => repository.GetRoute(number));
 
+    protected override Route FabricMethod(RouteCreateDto createDto) => Route.Create(createDto);
 
-    public async Task<Result<Route>> Create(RouteCreateDto createDto)
+    protected override async Task<Result<Route>> CreateChecks(Route entity)
     {
-        var validation = Validator.Use<RouteCreateValidator, RouteCreateDto>(createDto);
-
-        if (!validation.IsSuccess)
-            return validation;
-
-        var route = Route.Create(createDto);
-        if (await repository.Exists(createDto.Number, createDto.Name))
+        if (await repository.Exists(entity.Number, entity.Name))
             return Result<Route>.Conflict("Маршрут з такою назвою чи номером вже існує");
-
-        await repository.SaveRoute(route);
-        return route;
+        
+        return Result<Route>.Success(entity);
     }
 }

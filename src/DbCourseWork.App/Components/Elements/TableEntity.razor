@@ -37,7 +37,8 @@
 
             <div>
                 <label>Розмір сторінки</label>
-                <Select SelectedValue="@_pageSize" SelectedValueChanged="PageSizeChanged" Style="width: 100px" Size="Size.Medium" Class="mb-2" TValue="short">
+                <Select SelectedValue="@_pageSize" SelectedValueChanged="PageSizeChanged" Style="width: 100px"
+                        Size="Size.Medium" Class="mb-2" TValue="short">
                     @foreach (byte v in PageSizes)
                     {
                         <SelectItem Value="@v">@v</SelectItem>
@@ -62,6 +63,7 @@
                 @if (Loaded())
                 {
                     bool deleteEntity = EnableEntityDelete();
+                    bool editEntity = EnableEntityUpdate();
                     foreach (var entity in _entities!)
                     {
                         string[] values = entity.RowDisplayValues;
@@ -84,7 +86,20 @@
                             @if (deleteEntity)
                             {
                                 <TableRowCell>
-                                    <button @onclick="() => Delete(entity)"><Icon Name="IconName.Delete"/></button>
+                                    <button @onclick="() => Delete(entity)">
+                                        <Icon Name="IconName.Delete"/>
+                                    </button>
+                                </TableRowCell>
+                            }
+                            @if (editEntity)
+                            {
+                                <TableRowCell>
+                                    <button @onclick="() => { 
+                                        Guard.Against.Null(UpdateEntity);
+                                        return UpdateEntity(entity);
+                                            }">
+                                        <Icon Name="IconName.Edit"/>
+                                    </button>
                                 </TableRowCell>
                             }
                         </TableRow>
@@ -97,6 +112,7 @@
 </CascadingValue>
 
 @code {
+
     [Parameter]
     public string DisplayName { get; set; } = string.Empty;
 
@@ -105,9 +121,12 @@
 
     [Parameter]
     public Func<object, Task<Result<TEntity>>>? InsertEntity { get; set; }
-    
+
     [Parameter]
     public Func<TEntity, Task<Result>>? DeleteEntity { get; set; }
+
+    [Parameter]
+    public Func<TEntity, Task>? UpdateEntity { get; set; }
 
     [Parameter]
     public short[] PageSizes { get; set; } = [5, 10, 30];
@@ -117,7 +136,7 @@
 
     [Parameter]
     public RenderFragment? InsertForm { get; set; }
-    
+
     [Parameter]
     public EventCallback OnDataChanged { get; set; }
 
@@ -135,9 +154,10 @@
     private bool IsFirstPage() => _page == 1;
 
     private bool Loaded() => _entities != null;
-    
+
     public async Task ReloadData()
     {
+        Console.WriteLine("ReloadData");
         _page = 1;
         await FetchData();
         StateHasChanged();
@@ -188,6 +208,7 @@
         else
             _pageError.SetOnFailure(result);
     }
-    
+
     private bool EnableEntityDelete() => DeleteEntity != null;
+    private bool EnableEntityUpdate() => UpdateEntity != null;
 }

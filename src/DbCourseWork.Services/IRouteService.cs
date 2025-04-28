@@ -5,10 +5,8 @@ using Route = Core.Models.Route;
 
 namespace Services;
 
-public interface IRouteService : IMutableService<Route>
+public interface IRouteService : IMutableService<Route, RouteCreateDto>
 {
-    public Task<Route[]> GetAllRoutes();
-
     public Task<Result<Route>> Create(RouteCreateDto createDto);
 
     public Task<Result<Route>> Find(string number);

@@ -2,7 +2,7 @@ using Ardalis.Result;
 using Core.Interfaces;
 using Core.Models.Systems;
 using Data.Abstracrtions;
-using ResultExtensions = Utils.ResultExtensions;
+using ResultExtensions = Utils.Extensions.ResultExtensions;
 
 namespace Services.Abstractions;
 

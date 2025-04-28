@@ -2,7 +2,7 @@ using Ardalis.Result;
 
 namespace WebUI.Utils;
 
-public class FileUploader
+internal static class FileUploader
 {
     public static async Task<Result<List<T>>> OnFileUpload<T>(FileUploadEventArgs e, Func<Stream, int, Result<List<T>>> reader,
         Action? callback = null)

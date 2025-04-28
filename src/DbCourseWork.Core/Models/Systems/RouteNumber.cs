@@ -41,6 +41,14 @@ public struct RouteNumber
     
     public override string ToString() => _value;
     
+    public string Prefix => GetPrefix(_value);
+    
+    public short Suffix => GetSuffix(_value);
+    
+    public static string GetPrefix(string number) => new(number.TakeWhile(char.IsLetter).ToArray());
+    
+    public static short GetSuffix(string number) => Convert.ToInt16(number[GetPrefix(number).Length..]);
+
     public static string? ValidateNumber(string? number)
     {
         if (string.IsNullOrWhiteSpace(number))

@@ -1,29 +1,22 @@
 using Ardalis.Result;
 using Core.Models;
+using Core.Models.DTOs;
 using Core.Validations;
 using Data.Repositories;
 using Services.Abstractions;
 using Utils;
-using ResultExtensions = Utils.ResultExtensions;
+using ResultExtensions = Utils.Extensions.ResultExtensions;
 
 namespace Services;
 
 public class VehicleService(IVehicleRepository vehicleRepository)
-    : MutableService<Vehicle>(vehicleRepository), IVehicleService
+    : MutableService<Vehicle, Vehicle, VehicleCreateValidator>(vehicleRepository), IVehicleService
 {
     public Task<Result<IEnumerable<Vehicle>>> GetAllVehicles() =>
         ResultExtensions.InErrorHandler(vehicleRepository.GetAllVehicles);
 
-    public Task<Result<Vehicle>> Create(Vehicle vehicle)
-    {
-        var validationResult = Validator.Use<VehicleValidator, Vehicle>(vehicle);
-        if (!validationResult.IsSuccess)
-            return Task.FromResult((Result<Vehicle>)validationResult);
-        
-        return ResultExtensions.InErrorHandler(async () =>
-        {
-            await vehicleRepository.Insert(vehicle);
-            return vehicle;
-        });
-    }
+    protected override Vehicle FabricMethod(Vehicle createDto) => createDto;
+
+    protected override Task<Result<Vehicle>> CreateChecks(Vehicle entity) =>
+        Task.FromResult(Result<Vehicle>.Success(entity));
 }

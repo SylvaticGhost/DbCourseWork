@@ -1,7 +1,7 @@
 using Ardalis.Result;
 using Core.Models.Reports;
 using Data.Repositories;
-using ResultExtensions = Utils.ResultExtensions;
+using ResultExtensions = Utils.Extensions.ResultExtensions;
 
 namespace Services;
 

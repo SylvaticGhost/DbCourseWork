@@ -6,9 +6,12 @@ namespace Utils;
 public static class PropertyMapper
 {
     public static string[] GetFormFields(Type type) =>
-        type.GetProperties().Where(prop => Attribute.IsDefined(prop, typeof(UkrFormFieldAttribute)))
-            .Select(prop => prop.GetCustomAttribute<UkrFormFieldAttribute>()!.Name).ToArray();
-    
+        GetByAttribute<UkrFormFieldAttribute>(type)
+            .GetAttributeParams<string, UkrFormFieldAttribute>(a => a.Name);
+
+    public static string[] GetDbColumnNames(Type type) =>
+        GetByAttribute<DbColumnAttribute>(type).GetAttributeParams<string, DbColumnAttribute>(a => a.ColumnName);
+
     private static IReadOnlyDictionary<string, string> Map(Type type, DictMapOptions options) => type.GetProperties()
         .Where(options.Filter).Select(options.PropertyToPairFunc).ToDictionary(options.KeyMapFunc, options.ValMapFunc);
 
@@ -48,13 +51,13 @@ public static class PropertyMapper
     }
 
     public static Type GetTypeOfProperty<T>(string field) => GetTypeOfProperty(field, typeof(T));
-    
-    public static PropertyInfo[] GetByAttribute(Type type,Type attributeType) => type.GetProperties()
+
+    public static PropertyInfo[] GetByAttribute(Type type, Type attributeType) => type.GetProperties()
         .Where(prop => Attribute.IsDefined(prop, attributeType)).ToArray();
-    
+
     public static PropertyInfo[] GetByAttribute<TAttribute>(Type type) where TAttribute : Attribute =>
         GetByAttribute(type, typeof(TAttribute));
-    
+
     public static Func<object, object?> GetValueGetter(Type type, string propertyName)
     {
         var property = type.GetProperty(propertyName);
@@ -64,7 +67,7 @@ public static class PropertyMapper
         return GetValueGetter(type, property);
     }
 
-    public static Func<object, object?> GetValueGetter(Type type, PropertyInfo property)
+    private static Func<object, object?> GetValueGetter(Type type, PropertyInfo property)
     {
         var getter = property.GetGetMethod();
         if (getter == null)
@@ -72,4 +75,8 @@ public static class PropertyMapper
 
         return obj => getter.Invoke(obj, null);
     }
+    
+    private static T[] GetAttributeParams<T, TAttribute>(this PropertyInfo[] props, Func<TAttribute, T> selector)
+        where TAttribute : Attribute => props.Select(prop => prop.GetCustomAttribute<TAttribute>()!)
+        .Select(selector).ToArray();
 }

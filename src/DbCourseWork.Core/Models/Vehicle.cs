@@ -1,12 +1,13 @@
 using Ardalis.GuardClauses;
 using Core.Enums;
 using Core.Interfaces;
+using Core.Models.DTOs;
 using Core.Models.Systems;
 using Utils.Attributes;
 
 namespace Core.Models;
 
-public record Vehicle : IFormTableEntity, IDbEntity, IPrototype<Vehicle>
+public record Vehicle : IMutableFormEntity<Vehicle, VehicleUpsertParam>,IDbEntity, IPrototype<Vehicle>
 {
     public const int MaxNumber = 9999;
     
@@ -28,22 +29,13 @@ public record Vehicle : IFormTableEntity, IDbEntity, IPrototype<Vehicle>
 
     [DbConstructor]
     public Vehicle(decimal number, short type) : this((int)number, (VehicleType)type) { }
+
+    public VehicleUpsertParam ToUpsertParam() => new (Type, Number);
     
     public string[] RowDisplayValues => [Number.ToString(), Type.ToString()];
     public string? UrlOnPage => null;
-    
-    public static readonly Dictionary<string, string> FieldNamesUkrToEngDictionary = new()
-    {
-        ["номер"] = "number",
-        ["тип"] = "type"
-    };
 
-    public static readonly string[] FormFields = FieldNamesUkrToEngDictionary.Keys.ToArray();
-    public static readonly string[] FormFieldEng = ["number", "type"];
-    
     public string AsSqlRow() => $"{Number}, {(int)Type}";
-
-    public static readonly string[] Columns = ["number", "type"];
 
     public static readonly Field[] SortingFields = [new(nameof(Number), "number", "номер")];
     public Vehicle DeepCopy() => new(Number, Type);

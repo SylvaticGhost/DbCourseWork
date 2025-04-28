@@ -4,7 +4,7 @@ using Services.Abstractions;
 
 namespace Services;
 
-public interface IVehicleService : IMutableService<Vehicle>
+public interface IVehicleService : IMutableService<Vehicle, Vehicle>
 {
     public Task<Result<IEnumerable<Vehicle>>> GetAllVehicles();
 
